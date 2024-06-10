@@ -22,6 +22,8 @@ navigation_levels: 3
 
 ## Prerequisites
 
+GitHub Account
+
 Activate "Enable Catalog per projects"
 ![Enable Catalog per projects](assets/dev-center-enable-catalog-per-project.png)
 
@@ -117,6 +119,53 @@ In the **Catalog item settings** pane, select **Azure deployment environment def
 
 Now, you can add a catalog to the project.
 
+Developers can customize their devboxes using yaml files such as:
+```yaml
+# https://github.com/microsoft/devcenter-catalog
+# From https://github.com/microsoft/devcenter-examples
+# Optionaly declare the devbox image to use 
+
+$schema: 1.0
+name: "devbox-customization"
+tasks:
+  - name: choco
+    parameters:
+      package: vscode
+
+  - name: choco
+    parameters:
+      package: azd
+
+  - name: git-clone
+    description: Clone this repository into C:\Documents
+    parameters:
+      repositoryUrl: https://github.com/damienaicheh/dotnet-command-api.git
+      directory: C:\Documents
+
+  - name: powershell
+    description: Install Azure Cli - Visual Studio Code extensions
+    parameters:
+      command: code --install-extension ms-vscode.azurecli
+
+  - name: powershell
+    description: Install Azure Dev Tools - Visual Studio Code extensions
+    parameters:
+      command: code --install-extension ms-azuretools.azure-dev
+
+  - name: powershell
+    description: Install Azure Dev Tools - Visual Studio Code extensions
+    parameters:
+      command: code --install-extension ms-vscode.vscode-node-azure-pack
+
+# Other possibilities: winget, install-vs-extension   
+```
+
+![Project add catalog](assets/project-add-deb-box-catalog.png)
+
+Add project permission to key vault.
+
+https://<kv-name>.vault.azure.net/secrets/Pat
+
 ## Lab 2
 
 ### Manage a project
@@ -160,5 +209,7 @@ If everything is ok, you should see the environments linked to the project:
 ![Project environment linked](assets/project-environment-linked.png)
 
 #### Add a catalog to the project
+
+
 
 ## Lab 3 
