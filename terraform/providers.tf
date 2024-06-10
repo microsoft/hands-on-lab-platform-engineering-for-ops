@@ -14,6 +14,11 @@ terraform {
       source  = "hashicorp/random"
       version = "3.6.2"
     }
+
+     azapi = {
+      source = "Azure/azapi"
+      version = "1.13.1"
+    }
   }
 
   backend "local" {}
@@ -22,4 +27,8 @@ terraform {
 
 provider "azurerm" {
   features {}
+}
+
+provider "azapi" {
+  # Configuration options
 }

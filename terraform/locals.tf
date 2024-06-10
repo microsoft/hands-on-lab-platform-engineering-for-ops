@@ -2,6 +2,8 @@ locals {
   resource_lowercase_array  = [lower(var.environment), substr(lower(var.location), 0, 2), substr(lower(var.application), 0, 3), random_id.resource_group_name_suffix.hex, var.resource_group_name_suffix]
   resource_suffix_kebabcase = join("-", local.resource_lowercase_array)
 
+  dev_center_environment_types = toset(["dev", "test", "prod"])
+
   tags = merge(
     var.tags,
     tomap(
