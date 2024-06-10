@@ -26,10 +26,36 @@ Activate "Enable Catalog per projects"
 ![Enable Catalog per projects](assets/dev-center-enable-catalog-per-project.png)
 
 ## Lab 1
-## Lab 2
 
-### Manage a project
-#### Create a projects
+
+
+Inside the Dev Center, go to **Dev Box Definitions** and select **Create**
+
+Create a new Dev Box definition with the following parameters:
+
+- Name: `dev-box-ops-win-11-frontend-<your-initials>`
+- Image: Pick a Visual Studio 2022 image with Windows 11
+- Image version: `Latest`
+- Compute size: `8 vCPUs, 32 GB RAM`
+- Disk size: `256 GiB SSD`
+
+And enable Hibernate mode, this will...
+
+![Dev Box definition](assets/dev-center-dev-box-definitions-create.png)
+
+Repeat the same steps to create a new Dev Box definition for the backend:
+
+- Name: `dev-box-ops-win-11-backend-<your-initials>`
+- Image: Pick a Visual Studio 2022 image with Windows 11
+- Image version: `Latest`
+- Compute size: `16 vCPUs, 64 GB RAM`
+- Disk size: `512 GiB SSD`
+
+You have now created two Dev Box definitions, one for the frontend and one for the backend.
+
+![Dev Box definitions](assets/dev-center-dev-box-definitions.png)
+
+### Create a project
 
 Create a project:
 
@@ -49,6 +75,51 @@ Set it to 5.
 Click on **Review + Create** and then **Create**.
 
 After a few seconds, the project is created. Open it.
+
+
+
+#### Create Dev Box pools for the project
+
+You can now assign the Dev Box definitions you created to the project. They will be used to create Dev Boxes for the developers.
+
+Inside your project, go to **Dev Box Pools** and click on **Create**.
+
+Start with the frontend one, give it the name `dev-box-ops-win-11-frontend-<your-initials>`  and select the Dev Box definition you created for the frontend.
+
+For the network part, you can inject a Dev Box into a VNet but for this lab, we will keep it simple and use the default Microsoft Hosted network in `West Europe`
+
+
+Select local administrator this will...
+
+![Dev Box pool part 1](assets/project-dev-box-pool-part-1.png)
+
+Then you have the ability to configure `Auto-stop` mode, this will...
+
+![Dev Box pool part 2](assets/project-dev-box-pool-part-2.png)
+
+Check the licence agreement and click on **Create**.
+
+Repeat the same steps to create a Dev Box pool for the backend Dev Box definition.
+
+You have now created two Dev Box pools, one for the frontend and one for the backend. The developers assigned to this project will be able to create Dev Boxes from these pools.
+
+#### Autorized customizations
+
+To enable the use of catalog items at the project definition:
+
+In the project under **Settings**, select **Catalogs**. 
+
+![Project enable catalog items](assets/project-enable-catalog-items.png)
+
+In the **Catalog item settings** pane, select **Azure deployment environment definitions** to enable the use of environment definitions at the project level.
+
+![Project enable catalog items validation](assets/project-enable-catalog-items-validation.png)
+
+Now, you can add a catalog to the project.
+
+## Lab 2
+
+### Manage a project
 
 #### Assign an identity to the project
 
