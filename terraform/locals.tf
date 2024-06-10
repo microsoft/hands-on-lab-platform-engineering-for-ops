@@ -3,6 +3,7 @@ locals {
   resource_suffix_kebabcase = join("-", local.resource_lowercase_array)
 
   dev_center_environment_types = toset(["dev", "test", "prod"])
+  users_index                  = toset([for i in range(var.number_of_users) : format("%s", i)])
 
   tags = merge(
     var.tags,
