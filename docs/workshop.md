@@ -204,6 +204,12 @@ Click on **Add** and you should see the catalog added to the project with a stat
 
 Now, the developers assigned to this project will be able to use the tasks defined in the catalog to customize their Dev Boxes.
 
+#### Test from a Developer perspective
+
+Add the role `DevCenter DevBox User` to your self.
+
+Go to the [Dev Box Portal][dev-box-portal] and sign in.
+
 ## Lab 2
 
 ### Manage a project
@@ -282,13 +288,13 @@ Create your own catalog. In your own GitHub account, create a new repository and
 ```yaml
 name: APIM
 summary: This is an APIM deployment using Bicep.
-description: Deploys an APIM.
+description: Deploys an APIM using the Consumption Sku.
 templatePath: main.bicep
 parameters:
-- id: "name"
-  name: "name"
-  description: "Name of the Apim"
-  type: "string"
+- id: name
+  name: Name
+  description: 'Name of the Apim'
+  type: string
   required: true
 runner: Bicep
 ```
@@ -301,40 +307,21 @@ runner: Bicep
 @description('The name of the API Management service instance')
 param name string = ''
 
-var resourceName = !empty(name) ? replace(name, ' ', '-') : 'apim${uniqueString(resourceGroup().id)}'
-
-@description('The pricing tier of this API Management service')
-@allowed([
-  'Consumption'
-  'Developer'
-  'Basic'
-  'Basicv2'
-  'Standard'
-  'Standardv2'
-])
-param sku string = 'Developer'
-
-@description('The instance size of this API Management service.')
-@allowed([
-  0
-  1
-  2
-])
-param skuCount int = 1
+var resourceName = !empty(name) ? replace(name, ' ', '-') : 'apim'
 
 @description('Location for all resources.')
 param location string = resourceGroup().location
 
 resource apiManagementService 'Microsoft.ApiManagement/service@2023-05-01-preview' = {
-  name: resourceName
+  name:  'resourceName${uniqueString(resourceGroup().id)}'
   location: location
   sku: {
-    name: sku
-    capacity: skuCount
+    name: 'Consumption'
+    capacity: 0
   }
   properties: {
-    publisherEmail: "company@company.me"
-    publisherName: "Company"
+    publisherEmail: 'company@company.me'
+    publisherName: 'Company'
   }
 }
 ```
@@ -343,9 +330,21 @@ Of course the deployment can be more complex, with multiple bicep files and modu
 
 Now, you can add this catalog to the project in the same way you did for the Dev Box catalog.
 
+#### In the Developer shoes
 
-// Show the result..
+Add the role `Deployment Environments User` to your self.
 
+Go to the [Dev Box Portal][dev-box-portal] and sign in.
+
+![Dev Box Portal Environment Creation](assets/dev-box-portal-environment-created.png)
+
+###  In the Ops / Admin shoes
+
+Add the role `DevCenter Project Admin` to your self at the project level.
+
+// Add Image of Environment tabs
+
+You can see the associated cost for each deployment using the `View Cost` tab and potential advisor recommendations.
 
 ## Lab 3 
 

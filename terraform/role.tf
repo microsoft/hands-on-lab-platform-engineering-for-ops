@@ -16,18 +16,3 @@ resource "azurerm_role_assignment" "users_key_vault_secret_user" {
   role_definition_name = "Key Vault Secrets User"
   principal_id         = azuread_user.this[each.key].id
 }
-
-
-# resource "azurerm_role_assignment" "dev_center_devbox_user" {
-#   for_each             = local.users_index
-#   scope                = azurerm_dev_center.this.id
-#   role_definition_name = "DevCenter DevBox User"
-#   principal_id         = azuread_user.this[each.key].id
-# }
-
-# resource "azurerm_role_assignment" "dev_center_project_admin" {
-#   for_each             = local.users_index
-#   scope                = azurerm_dev_center.this.id
-#   role_definition_name = "DevCenter Project Admin"
-#   principal_id         = azuread_user.this[each.key].id
-# }
