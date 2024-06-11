@@ -24,6 +24,10 @@ navigation_levels: 3
 
 GitHub Account
 
+Create PAT
+https://learn.microsoft.com/en-us/azure/deployment-environments/how-to-configure-catalog?tabs=GitHubRepoPAT#create-a-personal-access-token-in-github
+
+
 Activate "Enable Catalog per projects"
 ![Enable Catalog per projects](assets/dev-center-enable-catalog-per-project.png)
 
@@ -160,11 +164,45 @@ tasks:
 # Other possibilities: winget, install-vs-extension   
 ```
 
-![Project add catalog](assets/project-add-deb-box-catalog.png)
+You can control the different tasks that can be executed on the Dev Box by adding or not their definition in a catalog.
 
-Add project permission to key vault.
+Official catalog are available here:
 
+https://github.com/microsoft/devcenter-catalog in the `Tasks` folder
+https://github.com/microsoft/devcenter-examples in the `advanced-examples` folder
+
+You can pick the tasks you want and put it in your own company repository and then add it to the project as a catalog. 
+
+In our case we have a catalog available at this location:
+
+with the following tasks:
+
+- choco
+- customization-wsl
+- download-ado-artifacts
+- git-clone
+- install-by-curl
+- install-docker
+- install-msi
+- install-vs-extension
+- powershell
+- winget
+
+Let's do this:
+
+![Project add catalog](assets/project-add-dev-box-catalog.png)
+
+Notice the `/` before the folder name `Tasks`, this is important to specify the folder where the catalog is located.
+
+Then go to the resource group to retreive the Key Vault name. This will be used to retreive the secrets from the Key Vault. The Pat is located at this location:
+
+```bash
 https://<kv-name>.vault.azure.net/secrets/Pat
+```
+
+Click on **Add** and you should see the catalog added to the project with a status of `Sync Successful`.
+
+Now, the developers assigned to this project will be able to use the tasks defined in the catalog to customize their Dev Boxes.
 
 ## Lab 2
 
@@ -210,6 +248,107 @@ If everything is ok, you should see the environments linked to the project:
 
 #### Add a catalog to the project
 
+As you saw in the previous lab, you can add a catalog to a project to allow developers to customize their Dev Boxes.
+However, catalog can also be used to define the Azure environments that will be available in the project. These catalogs are used by Azure Deployment Environment to create the environments using the same [portal][dev-box-portal] as the Dev Boxes.
+
+You will use the sample catalog available at this location:
+
+All the environments are defined in the `Environments` folder.
+
+As you can see, you have 2 environments available:
+- WebApp
+- FunctionApp
+
+Inside each folder you have:
+- an `environment.yaml` file that defines the environment configuration
+- an `azuredeploy.json` file that defines the ARM template to deploy the environment or a `main.bicep` file if you prefer to use Bicep
+- an optional `ade.parameters.json` file if you need to pass parameters
+
+
+You can also use Terraform and Pulumi to define your environments.
+
+![Project Add Environment Catalog](assets/project-add-environment-catalog.png)
+
+More examples are available in the [official catalog][ade-official-catalog]
+
+#### Create a catalog 
+
+Create your own catalog. In your own GitHub account, create a new repository and in an `CustomEnvironments` folder create an `Apim` folder the following files:
+
+// ADD IMAGE
+
+`environment.yaml`
+
+```yaml
+name: APIM
+summary: This is an APIM deployment using Bicep.
+description: Deploys an APIM.
+templatePath: main.bicep
+parameters:
+- id: "name"
+  name: "name"
+  description: "Name of the Apim"
+  type: "string"
+  required: true
+runner: Bicep
+```
+
+// ADD IMAGE
+
+`main.bicep`:
+
+```bicep
+@description('The name of the API Management service instance')
+param name string = ''
+
+var resourceName = !empty(name) ? replace(name, ' ', '-') : 'apim${uniqueString(resourceGroup().id)}'
+
+@description('The pricing tier of this API Management service')
+@allowed([
+  'Consumption'
+  'Developer'
+  'Basic'
+  'Basicv2'
+  'Standard'
+  'Standardv2'
+])
+param sku string = 'Developer'
+
+@description('The instance size of this API Management service.')
+@allowed([
+  0
+  1
+  2
+])
+param skuCount int = 1
+
+@description('Location for all resources.')
+param location string = resourceGroup().location
+
+resource apiManagementService 'Microsoft.ApiManagement/service@2023-05-01-preview' = {
+  name: resourceName
+  location: location
+  sku: {
+    name: sku
+    capacity: skuCount
+  }
+  properties: {
+    publisherEmail: "company@company.me"
+    publisherName: "Company"
+  }
+}
+```
+
+Of course the deployment can be more complex, with multiple bicep files and modules.
+
+Now, you can add this catalog to the project in the same way you did for the Dev Box catalog.
+
+
+// Show the result..
 
 
 ## Lab 3 
+
+
+[dev-box-portal]: https://devbox.microsoft.com/
+[ade-official-catalog]: https://github.com/Azure/deployment-environments
