@@ -65,4 +65,5 @@ variable "user_account_enabled" {
 variable "number_of_users" {
   description = "The number of users to create"
   type        = number
+  default     = 0
 }

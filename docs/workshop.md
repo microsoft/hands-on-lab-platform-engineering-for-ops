@@ -19,25 +19,242 @@ navigation_levels: 3
 
 # Product Hands-on Lab - Platform engineering for Ops
 
+Welcome to this Platform engineering for Ops Workshop. You'll be experimenting with Azure services in multiple labs to undestand real world scenarios. Don't worry, this is a step by step lab, you will be guided through the whole process.
 
-## Prerequisites
+During this workshop you will have the instructions to complete each steps. It is recommended to search for the answers in provided resources and links before looking at the solutions placed under the '📚 Toggle solution' panel.
 
-GitHub Account
+<div class="task" data-title="Task">
 
-Create PAT
-https://learn.microsoft.com/en-us/azure/deployment-environments/how-to-configure-catalog?tabs=GitHubRepoPAT#create-a-personal-access-token-in-github
+> You will find the instructions and expected configurations for each Lab step in these yellow **TASK** boxes.
+> Inputs and parameters to select will be defined, all the rest can remain as default as it has no impact on the scenario.
+
+</div>
+
+## Pre-requisites
+
+Before starting this lab, be sure to set your Azure environment :
+
+- An Azure Subscription with the **Owner** role to create and manage the labs' resources and deploy the infrastructure as code
+- Register the Azure providers on your Azure Subscription if not done yet: `Microsoft.DevCenter`, `Microsoft.KeyVault`, `Microsoft.ApiManagement`, `Microsoft.Web`.
+
+To be able to do the lab content :
+
+- A Github account (Free, Team or Enterprise)
+- Create a [fork][repo-fork] of the repository from the **main** branch to help you keep track of your changes
 
 
-Activate "Enable Catalog per projects"
+3 development options are available:
+  - 🥇 **Preferred method** : Pre-configured GitHub Codespace 
+  - 🥈 Local Devcontainer
+  - 🥉 Local Dev Environment with all the prerequisites detailed below
+
+<div class="tip" data-title="Tips">
+
+> To focus on the main purpose of the lab, we encourage the usage of devcontainers/codespace as they abstract the dev environment configuration, and avoid potential local dependencies conflict.
+> 
+> You could decide to run everything without relying on a devcontainer : To do so, make sure you install all the prerequisites detailed below.
+
+</div>
+
+### 🥇 : Pre-configured GitHub Codespace
+
+To use a Github Codespace, you will need :
+- [A GitHub Account][github-account]
+
+Github Codespace offers the ability to run a complete dev environment (Visual Studio Code, Extensions, Tools, Secure port forwarding etc.) on a dedicated virtual machine. 
+The configuration for the environment is defined in the `.devcontainer` folder, making sure everyone gets to develop and practice on identical environments : No more conflict on dependencies or missing tools ! 
+
+Every Github account (even the free ones) grants access to 120 vcpu hours per month, _**for free**_. A 2 vcpu dedicated environment is enough for the purpose of the lab, meaning you could run such environment for 60 hours a month at no cost!
+
+To get your codespace ready for the labs, here are a few steps to execute : 
+- After you forked the repo, click on `<> Code`, `Codespaces` tab and then click on the `+` button:
+
+![codespace-new](./assets/codespace-new.png)
+
+- You can also provision a beefier configuration by defining creation options and select the **Machine Type** you like: 
+
+![codespace-configure](./assets/codespace-configure.png)
+
+### 🥈 : Using a local Devcontainer
+
+This repo comes with a Devcontainer configuration that will let you open a fully configured dev environment from your local Visual Studio Code, while still being completely isolated from the rest of your local machine configuration : No more dependency conflict.
+Here are the required tools to do so : 
+
+- [Git client][git-client] 
+- [Docker Desktop][docker-desktop] running
+- [Visual Studio Code][vs-code] installed
+
+Start by cloning the Hands-on Lab Platform engineering for Ops repo you just forked on your local Machine and open the local folder in Visual Studio Code.
+Once you have cloned the repository locally, make sure Docker Desktop is up and running and open the cloned repository in Visual Studio Code.  
+
+You will be prompted to open the project in a Dev Container. Click on `Reopen in Container`. 
+
+If you are not prompted by Visual Studio Code, you can open the command palette (`Ctrl + Shift + P`) and search for `Reopen in Container` and select it: 
+
+![devcontainer-reopen](./assets/devcontainer-reopen.png)
+
+### 🥉 : Using your own local environment
+
+The following tools and access will be necessary to run the lab in good conditions on a local environment :  
+
+- [Git client][git-client] 
+- [Visual Studio Code][vs-code] installed (you will use Dev Containers)
+- [Azure CLI][az-cli-install] installed on your machine
+- [Terraform][terraform-install] installed, this will be used for deploying the resources on Azure
+
+Once you have set up your local environment, you can clone the Hands-on Lab Platform engineering for Ops repo you just forked on your machine, and open the local folder in Visual Studio Code and head to the next step. 
+
+### 🔑 Sign in to Azure
+
+<div class="task" data-title="Task">
+
+> - Log into your Azure subscription in your environment using Azure CLI and on the [Azure Portal][az-portal] using your credentials.
+> - Instructions and solutions will be given for the Azure CLI, but you can also use the Azure Portal if you prefer.
+
+</div>
+
+<details>
+
+<summary>📚 Toggle solution</summary>
+
+```bash
+# Login to Azure : 
+# --tenant : Optional | In case your Azure account has access to multiple tenants
+
+# Option 1 : Local Environment or Dev Container
+az login --tenant <yourtenantid or domain.com>
+# Option 2 : Github Codespace : you might need to specify --use-device-code parameter to ease the az cli authentication process
+az login --use-device-code --tenant <yourtenantid or domain.com>
+
+# Display your account details
+az account show
+# Select your Azure subscription
+az account set --subscription <subscription-id>
+
+# Register the following Azure providers if they are not already
+
+# Microsoft DevCenter
+az provider register --namespace 'Microsoft.DevCenter'
+# Azure Key Vault
+az provider register --namespace 'Microsoft.KeyVault'
+# Azure API Management
+az provider register --namespace 'Microsoft.ApiManagement'
+# Azure Functions & Azure Web Apps
+az provider register --namespace 'Microsoft.Web'
+```
+
+</details>
+
+## Deploy the infrastructure
+
+You must deploy the infrastructure before starting the lab. 
+
+First, you need to initialize the terraform infrastructure by running the following command:
+
+```bash
+cd terraform && terraform init
+```
+
+If you wan't to create multiple users for the lab, you can create a `env.tfvars` file and change set the `number_of_users` variable to the number of users you want to create.
+
+```js
+domain_name           = "example.onmicrosoft.com"
+user_default_password = "SET_YOUR_PASSWORD_HERE"
+number_of_users       = 20
+```
+
+Then run the following command to deploy the infrastructure:
+
+```bash
+# Use the -var-file flag to specify the env.tfvars file only if you created it
+terraform plan -out plan.out -var-file env.tfvars
+# Deploy the infrastructure
+terraform apply plan.out
+```
+
+The deployment should take around 2 minutes to complete.
+
+## Create a GitHub PAT
+
+To be able to use the Catalogs features in Azure Dev Center, you need to create a GitHub Personal Access Token (PAT) with the following permissions:
+
+In GitHub, select the profile image, and then select Settings. On the left sidebar, select **Developer settings** > **Personal access tokens** > **Fine-grained tokens**, Select **Generate new token**.
+
+On the New fine-grained personal access token page, provide the following information:
+
+Set a descriptive name for the token, an expiration date to 30 days, and select the following permissions:
+
+In `Repository access` select **All repositories**, then expand `Repository permissions`, and for `Contents`, from the Access list, select `Read Only`.
+
+Then click on **Generate token**. If you need more information on this mechanism you can refer to the [official documentation][az-dev-center-github-pat].
+
+Now, open the resource group deploy with Terraform previously and open the Key Vault. In the **Secrets** tab, you will find a secret named Pat, click on it and then select **New Version** and update the value with your GitHub Token:
+
+![Key Vault Pat](assets/key-vault-pat.png)
+
+## Activate the Catalog feature
+
+Finally, in the Dev Center, go to **Settings** and then **Configuration** and Click on **Enable Catalog per projects**. This will allow you to define your catalogs at the project level, you will learn more about this in the lab.
+
 ![Enable Catalog per projects](assets/dev-center-enable-catalog-per-project.png)
 
-## Lab 1
+Validate the change and you are ready for the lab.
 
+[az-cli-install]: https://learn.microsoft.com/en-us/cli/azure/install-azure-cli
+[az-dev-center-github-pat]: https://learn.microsoft.com/en-us/azure/deployment-environments/how-to-configure-catalog?tabs=GitHubRepoPAT#add-a-catalog
+[az-portal]: https://portal.azure.com
+[docker-desktop]: https://www.docker.com/products/docker-desktop/
+[git-client]: https://git-scm.com/downloads
+[github-account]: https://github.com/join
+[repo-fork]: https://github.com/microsoft/hands-on-lab-platform-engineering-for-ops/fork
+[vs-code]: https://code.visualstudio.com/
+[terraform-install]: https://learn.hashicorp.com/tutorials/terraform/install-cli
 
+---
 
-Inside the Dev Center, go to **Dev Box Definitions** and select **Create**
+# Lab 1 - Dev Box Management
 
-Create a new Dev Box definition with the following parameters:
+Dev Center is a platform that allows you to create and manage Dev Boxes for your developers. Dev Boxes are fully managed development environments that can be customized to meet the needs of your developers. You can create Dev Box definitions that define the size and configuration of the Dev Boxes, and then create Dev Box pools that contain the Dev Box definitions. Developers can then create Dev Boxes from the Dev Box pools on demands.
+
+Dev Boxes are VM instances that are created in your Azure subscription and managed behind the scene using Intune. They are fully managed by Microsoft and are automatically updated with the latest security patches and updates. Dev Boxes is designed for developers.  
+
+The goal of this lab is to create a project in the Dev Center and assign Dev Box definitions to it. You will also create Dev Box pools for a project and assign the Dev Box definitions to them. The developers assigned to the project will then be able to create Dev Boxes on demands. You will also see how to enable customizations for the Dev Boxes using catalogs.
+
+## Create a Dev Box definition
+
+To reflect a real-world scenario, we will create two Dev Box definitions, one for the frontend and one for the backend. The Dev Box definitions will have different sizes and configurations to meet the needs of the developers working on the frontend and the backend.
+
+<div class="task" data-title="Tasks">
+
+> Create 2 Dev Box definitions, one for the frontend and one for the backend.
+>
+> The frontend Dev Box definition should have the following configuration:
+> - Name: `dev-box-ops-win-11-frontend-<your-initials>`
+> - Image: Pick a Visual Studio 2022 image with Windows 11
+> - Image version: `Latest`
+> - Compute size: `8 vCPUs, 32 GB RAM`
+>
+> The backend Dev Box definition should have the following configuration:
+> - Name: `dev-box-ops-win-11-backend-<your-initials>`
+> - Image: Pick a Visual Studio 2022 image with Windows 11
+> - Image version: `Latest`
+> - Compute size: `16 vCPUs, 64 GB RAM`
+>
+
+</div>
+
+<div class="tip" data-title="Tips">
+
+> [Dev Box Definition setup][dev-box-definition]<br>
+
+</div>
+
+<details>
+<summary>📚 Toggle solution</summary>
+
+To do that, inside the Dev Center, go to **Dev Box Definitions** and select **Create**
+
+Create a new Dev Box definition with the following parameters to represent the frontend Dev Box:
 
 - Name: `dev-box-ops-win-11-frontend-<your-initials>`
 - Image: Pick a Visual Studio 2022 image with Windows 11
@@ -45,7 +262,7 @@ Create a new Dev Box definition with the following parameters:
 - Compute size: `8 vCPUs, 32 GB RAM`
 - Disk size: `256 GiB SSD`
 
-And enable Hibernate mode, this will...
+And enable the Hibernate mode. The Hibernation feature is a power-saving state that saves your running applications to your hard disk and then shuts down the virtual machine (VM). When you resume the VM, all your previous work is restored.
 
 ![Dev Box definition](assets/dev-center-dev-box-definitions-create.png)
 
@@ -61,7 +278,11 @@ You have now created two Dev Box definitions, one for the frontend and one for t
 
 ![Dev Box definitions](assets/dev-center-dev-box-definitions.png)
 
-### Create a project
+These Dev Boxes definitions are now available at the Dev Center level, the next step is to assign them to a project.
+
+</details>
+
+## Create a project
 
 Create a project:
 
@@ -210,7 +431,11 @@ Add the role `DevCenter DevBox User` to your self.
 
 Go to the [Dev Box Portal][dev-box-portal] and sign in.
 
-## Lab 2
+[dev-box-definition]: https://learn.microsoft.com/en-us/azure/dev-box/how-to-manage-dev-box-definitions
+
+---
+
+# Lab 2 - Find title
 
 ### Manage a project
 
@@ -346,8 +571,25 @@ Add the role `DevCenter Project Admin` to your self at the project level.
 
 You can see the associated cost for each deployment using the `View Cost` tab and potential advisor recommendations.
 
-## Lab 3 
-
-
 [dev-box-portal]: https://devbox.microsoft.com/
 [ade-official-catalog]: https://github.com/Azure/deployment-environments
+
+---
+
+# Lab 3 
+
+
+---
+
+# Closing the workshop
+
+Once you're done with this lab you can delete the resource group you created at the beginning.
+
+To do so, click on `delete resource group` in the Azure Portal to delete all the resources and audio content at once. The following Az-Cli command can also be used to delete the resource group :
+
+```bash
+# Delete the resource group with all the resources
+az group delete --name <resource-group>
+```
+
+Also, for security purpose, remove the unused GitHub PAT token in your GitHub account.
