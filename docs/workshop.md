@@ -446,6 +446,7 @@ Now, you can add a catalog to the project.
 > - Add the Catalog `/tasks` available in the [Git repository][git-repo] of this lab to the project to enable the use of catalog items at the project definition. <br>
 > - Target the `main` branch of the repository.<br>
 > - Use the GitHub PAT token secret available in the Key Vault by refering this url with the right name: `https://<YOUR-KEY-VAULT-NAME>.vault.azure.net/secrets/Pat`
+> - Give the catalog the name `official-tasks`
 
 </div>
 
@@ -462,7 +463,7 @@ Let's add the catalog to the project. Go to the project **Settings** and then **
 
 ![Project add catalog](assets/project-add-dev-box-catalog.png)
 
-Set the `Repo` url to https://github.com/microsoft/hands-on-lab-platform-engineering-for-ops.git and target the `main` branch. 
+Set the `Repo` url to `https://github.com/microsoft/hands-on-lab-platform-engineering-for-ops.git` and target the `main` branch. 
 
 Notice the `/` before the folder name `tasks`, this is important to specify the folder where the tasks are located.
 
@@ -482,7 +483,7 @@ Now, the developers assigned to this project will be able to use the tasks defin
 
 To see the Dev Box in action, you can act as a developer assigned to the project.
 
-In your project go to **Access control (IAM)** and add the role `DevCenter DevBox User` to your self.
+In your project go to **Access control (IAM)** and add the role `DevCenter DevBox User` to your self at the project level.
 
 Go to the [Dev Box Portal][dev-box-portal] and sign in, you should see a button to create a new Dev Box and be able to pass a yaml file to customize your Dev Box similar to the one we saw previously.
 
@@ -535,38 +536,86 @@ If everything is ok, you should see the 3 environments linked to the project in 
 
 </details>
 
-## Add a catalog to the project
+## Add environment catalog
 
 As you saw in the previous lab, you can add a catalog to a project to allow developers to customize their Dev Boxes.
-However, catalog can also be used to define the Azure environments that will be available in the project. These catalogs are used by Azure Deployment Environment to create the environments using the same [portal][dev-box-portal] as the Dev Boxes.
 
-You will use the sample catalog available at this location:
+However, catalogs can also be used to define the Azure environments that will be available in the project. These catalogs of Azure resources are created by the ops team to give the developers team the appropriate area to deploy their application in compliance with company rules.
 
-All the environments are defined in the `Environments` folder.
+The developers will be able to create environments using the same [portal][dev-box-portal] as they used for Dev Boxes.
 
-As you can see, you have 2 environments available:
-- WebApp
-- FunctionApp
+To define an environment for a catalog you need to create a yaml file that will define the environment configuration and assiate this file with an Infra As Code template.
+
+The templates that you will use for this lab are located in the `environments` folder of this [repository][git-repo].
+
+As you can see, you have 2 folders:
+- `WebApp` to create a Web App environment (made using ARM)
+- `ContainerApp` to create your Container App (made using Bicep)
 
 Inside each folder you have:
 - an `environment.yaml` file that defines the environment configuration
 - an `azuredeploy.json` file that defines the ARM template to deploy the environment or a `main.bicep` file if you prefer to use Bicep
-- an optional `ade.parameters.json` file if you need to pass parameters
+
+You can also use Terraform and Pulumi to define your environments. Of course, you can create as much as infra as code files as you want to define your environment, you will just need to follow official conventions to have the right name for the entry point file.
+
+More examples are available in this [official catalog templates][ade-official-catalog]
+
+<div class="task" data-title="Tasks">
+
+> Add the `environments` folder from this [repository][git-repo] as a catalog to your project.
+> Use the `main` branch of the repository.
+> Use the GitHub PAT token secret available in the Key Vault by refering this url with the right name: 
+> `https://<YOUR-KEY-VAULT-NAME>.vault.azure.net/secrets/Pat`
+> Give the catalog the name `official-environments`
+
+</div>
+
+<details>
+<summary>📚 Toggle solution</summary>
+
+To add the catalog to the project, go to the project **Settings** and then **Catalogs** and click on **Add**.
 
 
-You can also use Terraform and Pulumi to define your environments.
+Set the `Repo` url to `https://github.com/microsoft/hands-on-lab-platform-engineering-for-ops.git` and target the `main` branch. 
+
+Notice the `/` before the folder name `environments`, this is important to specify the folder where the different Infra As Code templates are located.
+
+Then go to the resource group to retreive the Key Vault name. Like previously, this will be used to retreive the secrets from the Key Vault. The Pat is located at this location:
+
+```bash
+https://<YOUR-KEY-VAULT-NAME>.vault.azure.net/secrets/Pat
+```
+
+Click on **Add** and you should see the catalog added to the project with a status of `Sync Successful`.
 
 ![Project Add Environment Catalog](assets/project-add-environment-catalog.png)
 
-More examples are available in the [official catalog][ade-official-catalog]
+You now have a catalog of environments available in your project. Developers assigned to this project will be able to create environments using the templates defined in this catalog.
+</details>
 
 ## Create a catalog 
 
-Create your own catalog. In your own GitHub account, create a new repository and in an `CustomEnvironments` folder create an `Apim` folder the following files:
+Let's imagine that you want to create your own catalog of environments. This is a basic use case, if you have a specific environment configuration which reflect exactly one of your project.
 
-// ADD IMAGE
+Let's do this by providing an APIM environment using Bicep.
 
-`environment.yaml`
+<div class="task" data-title="Tasks">
+
+> Create your own catalog. In your own GitHub account, create a new **Public** repository and in an `CustomEnvironments` folder create an `Apim` folder
+> Add an `environment.yaml` file to define only the name of the APIM as a parameter
+> Add a `main.bicep` file to define the APIM deployment using Bicep and the Consumption SKU
+> Add the catalog to the project in the same way you did for the previous catalogs.
+
+</div>
+
+<details>
+<summary>📚 Toggle solution</summary>
+
+In your own GitHub account, create a new repository **Public** and in a `CustomEnvironments` folder create an `Apim` folder the following files:
+
+![Project custom catalog](assets/project-custom-catalog.png)
+
+The `environment.yaml` contains the following:
 
 ```yaml
 name: APIM
@@ -582,9 +631,7 @@ parameters:
 runner: Bicep
 ```
 
-// ADD IMAGE
-
-`main.bicep`:
+And the `main.bicep` file contains the following:
 
 ```bicep
 @description('The name of the API Management service instance')
@@ -609,28 +656,43 @@ resource apiManagementService 'Microsoft.ApiManagement/service@2023-05-01-previe
 }
 ```
 
-Of course the deployment can be more complex, with multiple bicep files and modules.
+Of course the deployment can be more complex, with multiple bicep files and modules but let's keep it simple for this lab.
 
-Now, you can add this catalog to the project in the same way you did for the Dev Box catalog.
+Now, you can add this catalog to the project in the same way you did for the previous catalog.
+
+If you need to update the catalog, you can do it by updating the files in the repository and then click on **Sync** in the catalog settings of the project.
+
+</details>
 
 ## Act as a Developer
 
-Add the role `Deployment Environments User` to your self.
+Let's act as a developer to try to create an environment using the catalog you just added. 
+
+Add the role `Deployment Environments User` to your self  at the project level.
 
 Go to the [Dev Box Portal][dev-box-portal] and sign in.
 
+You should see a button to create a new environment:
+
 ![Dev Box Portal Environment Creation](assets/dev-box-portal-environment-created.png)
+
+You can select the environment you want to create and pass the parameters needed for the deployment. After the deployment is done you can see the resources deployed by just clicking in the **Environment resources** link.
 
 ## Act as an Ops
 
+Let's act as an ops to see the deployment environments created by the developers.
+
 Add the role `DevCenter Project Admin` to your self at the project level.
 
-// Add Image of Environment tabs
+In the Azure Portal, in your project go to **Manage** and then **Environments**. You should see the environments created by the developers:
 
-You can see the associated cost for each deployment using the `View Cost` tab and potential advisor recommendations.
+// ADD IMAGE
 
-[dev-box-portal]: https://devbox.microsoft.com/
+You can see the associated cost for each deployment using the `View Cost` tab and potential advisor recommendations. As an Ops this will help you to control the cost of the deployments and to update your Infra As Code templates based on the security recommendations.
+
 [ade-official-catalog]: https://github.com/Azure/deployment-environments
+[dev-box-portal]: https://devbox.microsoft.com/
+[git-repo]: https://github.com/microsoft/hands-on-lab-platform-engineering-for-ops
 
 ---
 
