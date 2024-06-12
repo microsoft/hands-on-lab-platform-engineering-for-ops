@@ -284,18 +284,30 @@ These Dev Boxes definitions are now available at the Dev Center level, the next 
 
 ## Create a project
 
-Create a project:
+A project in Dev Center represent a group of developers working on a specific project. You can assign Dev Box definitions to a project and then create Dev Box pools for the project. Developers assigned to the project will be able to create Dev Boxes from the Dev Box pools.
+
+<div class="task" data-title="Tasks">
+
+> Create a project in the Dev Center with the following configuration:
+> - Name: `prj-ops-<your-initials>`
+> - Set the number of Dev Boxes to 5 as a maximum for each developer
+
+</div>
+
+<details>
+<summary>📚 Toggle solution</summary>
+
+Inside your Dev Center, go to **Manage** > **Projects** and click on **Create**.
 
 ![Create a project](assets/dev-center-new-project.png)
 
-Give a name that start with "prj-ops-" and then add your initials.
+Give a name that start with `prj-ops-<your-initials>` and then add your initials.
+
 ![New project](assets/project-new.png)
 
-Notice in the Dev Box management panel that you can directly fix the number of Dev Boxes for this project.
+In the **Dev Box Management** panel you can directly fix the number of Dev Boxes for this project.
 
-Select **Yes** and then select the maximum number of Dev Boxests allow you to restrict how many dev boxes each developer can create in a project.
-
-Set it to 5.
+Select **Yes** and set the maximum number of Dev Boxes that can be deployed per each developer to `5`:
 
 ![Project max dev boxes](assets/project-new-max-dev-boxes.png)
 
@@ -303,24 +315,42 @@ Click on **Review + Create** and then **Create**.
 
 After a few seconds, the project is created. Open it.
 
+</details>
 
+## Create Dev Box pools for the project
 
-#### Create Dev Box pools for the project
+The next step is to give access to the Dev Box definitions in the project. To do this, you need to create Dev Box pools for the project and assign the Dev Box definitions to them.
 
-You can now assign the Dev Box definitions you created to the project. They will be used to create Dev Boxes for the developers.
+<div class="task" data-title="Tasks">
+
+> Create 2 Dev Box pools for the project, one for the frontend and one for the backend.
+>
+> The frontend Dev Box pool should have the following configuration:
+> - Name: `dev-box-ops-win-11-frontend`
+> - Dev Box definition: `dev-box-ops-win-11-frontend-<your-initials>`
+> - Network: `Microsoft Hosted network` in `West Europe`
+> - Select `Local Administrator`
+> - Auto-stop mode: `Enabled` with your preferred time
+>
+> The backend Dev Box pool should have the same configuration except the name:
+> - Name: `dev-box-ops-win-11-backend`
+
+</div>
+
+<details>
+<summary>📚 Toggle solution</summary>
 
 Inside your project, go to **Dev Box Pools** and click on **Create**.
 
-Start with the frontend one, give it the name `dev-box-ops-win-11-frontend-<your-initials>`  and select the Dev Box definition you created for the frontend.
+Start with the frontend one, give it the name `dev-box-ops-win-11-frontend`  and select the Dev Box definition you created for the frontend.
 
-For the network part, you can inject a Dev Box into a VNet but for this lab, we will keep it simple and use the default Microsoft Hosted network in `West Europe`
+For the network part, you can inject a Dev Box into a specific VNet but for this lab, we will keep it simple and use the default Microsoft Hosted network in `West Europe`.
 
-
-Select local administrator this will...
+Select `Local Administrator` so the user can have full control over the Dev Box:
 
 ![Dev Box pool part 1](assets/project-dev-box-pool-part-1.png)
 
-Then you have the ability to configure `Auto-stop` mode, this will...
+To save on costs, you can enable an auto-stop schedule on a dev box pool. Microsoft Dev Box attempts to stop all dev boxes in the pool at the time specified in the schedule. You can configure one stop time in one timezone for each pool.
 
 ![Dev Box pool part 2](assets/project-dev-box-pool-part-2.png)
 
@@ -328,30 +358,23 @@ Check the licence agreement and click on **Create**.
 
 Repeat the same steps to create a Dev Box pool for the backend Dev Box definition.
 
-You have now created two Dev Box pools, one for the frontend and one for the backend. The developers assigned to this project will be able to create Dev Boxes from these pools.
+You have now created two Dev Box pools, one for the frontend and one for the backend. The developers assigned to this project will be able to create Dev Boxes from these pools only.
 
-#### Autorized customizations
+</details>
 
-To enable the use of catalog items at the project definition:
+## Autorized customizations
 
-In the project under **Settings**, select **Catalogs**. 
+At this point, you have created a project with Dev Box pools for the frontend and the backend developers. Those Dev Box pools provide default configuration for your developers. However, you may want to allow your developers to customize their Dev Boxes to meet their specific needs or to install additional tools. This is possible by authorizing customizations at the project level.
 
-![Project enable catalog items](assets/project-enable-catalog-items.png)
+Developers can customize their Dev Boxes using yaml files such as this one at the instanciation of the Dev Box:
 
-In the **Catalog item settings** pane, select **Azure deployment environment definitions** to enable the use of environment definitions at the project level.
-
-![Project enable catalog items validation](assets/project-enable-catalog-items-validation.png)
-
-Now, you can add a catalog to the project.
-
-Developers can customize their devboxes using yaml files such as:
 ```yaml
 # https://github.com/microsoft/devcenter-catalog
 # From https://github.com/microsoft/devcenter-examples
 # Optionaly declare the devbox image to use 
 
 $schema: 1.0
-name: "devbox-customization"
+name: "devbox-customization-example"
 tasks:
   - name: choco
     parameters:
@@ -364,64 +387,88 @@ tasks:
   - name: git-clone
     description: Clone this repository into C:\Documents
     parameters:
-      repositoryUrl: https://github.com/damienaicheh/dotnet-command-api.git
+      repositoryUrl: https://github.com/microsoft/dotnet.git
       directory: C:\Documents
 
-  - name: powershell
-    description: Install Azure Cli - Visual Studio Code extensions
-    parameters:
-      command: code --install-extension ms-vscode.azurecli
-
-  - name: powershell
-    description: Install Azure Dev Tools - Visual Studio Code extensions
-    parameters:
-      command: code --install-extension ms-azuretools.azure-dev
-
-  - name: powershell
-    description: Install Azure Dev Tools - Visual Studio Code extensions
-    parameters:
-      command: code --install-extension ms-vscode.vscode-node-azure-pack
-
-# Other possibilities: winget, install-vs-extension   
+# Other possibilities: powershell, winget, install-vs-extension   
 ```
 
-You can control the different tasks that can be executed on the Dev Box by adding or not their definition in a catalog.
+As you can see it's composed only of tasks that will be executed at the creation of the Dev Box. Those tasks are not available by default, you need to enable them at the project level.
 
-Official catalog are available here:
+You can control the different tasks that can be executed on the Dev Box by adding or not their definitions in a catalog.
+
+Official catalogs are available here:
 
 https://github.com/microsoft/devcenter-catalog in the `Tasks` folder
 https://github.com/microsoft/devcenter-examples in the `advanced-examples` folder
 
-You can pick the tasks you want and put it in your own company repository and then add it to the project as a catalog. 
+You can pick the tasks you want and put it in your own company repository and then refer it to the project as a catalog or refer these repositories directly.
 
-In our case we have a catalog available at this location:
-
-with the following tasks:
+In our case we have a folder called `tasks` available in this [Git repository][git-repo] with the following tasks:
 
 - choco
 - customization-wsl
 - download-ado-artifacts
 - git-clone
 - install-by-curl
-- install-docker
-- install-msi
 - install-vs-extension
 - powershell
 - winget
 
-Let's do this:
+To enable the use of catalog items, go to your project, under **Settings**, select **Catalogs**. 
+
+![Project enable catalog items](assets/project-enable-catalog-items.png)
+
+In the **Catalog item settings** pane, select **Azure deployment environment definitions** to enable the use of environment definitions at the project level.
+
+![Project enable catalog items validation](assets/project-enable-catalog-items-validation.png)
+
+Now, you can add a catalog to the project.
+
+<div class="task" data-title="Tasks">
+
+> - Add the Catalog `/tasks` available in the [Git repository][git-repo] of this lab to the project to enable the use of catalog items at the project definition. <br>
+> - Target the `main` branch of the repository.<br>
+> - Use the GitHub PAT token secret available in the Key Vault by refering this url with the right name: `https://<YOUR-KEY-VAULT-NAME>.vault.azure.net/secrets/Pat`
+
+</div>
+
+<div class="tip" data-title="Tips">
+
+> [Add a catalog with a GitHub PAT][add-catalog-with-github-pat]<br>
+
+</div>
+
+<details>
+<summary>📚 Toggle solution</summary>
+
+Let's add the catalog to the project. Go to the project **Settings** and then **Catalogs** and click on **Add**.
 
 ![Project add catalog](assets/project-add-dev-box-catalog.png)
 
-Notice the `/` before the folder name `Tasks`, this is important to specify the folder where the catalog is located.
+Set the `Repo` url to https://github.com/microsoft/hands-on-lab-platform-engineering-for-ops.git and target the `main` branch. 
+
+Notice the `/` before the folder name `tasks`, this is important to specify the folder where the tasks are located.
 
 Then go to the resource group to retreive the Key Vault name. This will be used to retreive the secrets from the Key Vault. The Pat is located at this location:
 
 ```bash
-https://<kv-name>.vault.azure.net/secrets/Pat
+https://<YOUR-KEY-VAULT-NAME>.vault.azure.net/secrets/Pat
 ```
 
 Click on **Add** and you should see the catalog added to the project with a status of `Sync Successful`.
+
+</details>
+
+
+
+
+
+
+
+
+
+
 
 Now, the developers assigned to this project will be able to use the tasks defined in the catalog to customize their Dev Boxes.
 
@@ -431,7 +478,9 @@ Add the role `DevCenter DevBox User` to your self.
 
 Go to the [Dev Box Portal][dev-box-portal] and sign in.
 
+[add-catalog-with-github-pat]: https://learn.microsoft.com/en-us/azure/deployment-environments/how-to-configure-catalog?tabs=GitHubRepoPAT#add-your-repository-as-a-catalog
 [dev-box-definition]: https://learn.microsoft.com/en-us/azure/dev-box/how-to-manage-dev-box-definitions
+[git-repo]: https://github.com/microsoft/hands-on-lab-platform-engineering-for-ops
 
 ---
 
