@@ -678,6 +678,8 @@ You should see a button to create a new environment:
 
 You can select the environment you want to create and pass the parameters needed for the deployment. After the deployment is done you can see the resources deployed by just clicking in the **Environment resources** link.
 
+The developers can use the Dev Box portal to deploy their environment but if they prefer they can use [Azure Developer CLI][azd-link] (azd) which is just one config file to add to their project to be able to deploy the environment using the CLI.
+
 ## Act as an Ops
 
 Let's act as an ops to see the deployment environments created by the developers.
@@ -693,6 +695,7 @@ You can see the associated cost for each deployment using the `View Cost` tab an
 [ade-official-catalog]: https://github.com/Azure/deployment-environments
 [dev-box-portal]: https://devbox.microsoft.com/
 [git-repo]: https://github.com/microsoft/hands-on-lab-platform-engineering-for-ops
+[azd-link]: https://learn.microsoft.com/en-us/azure/developer/azure-developer-cli/
 
 ---
 
