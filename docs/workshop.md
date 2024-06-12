@@ -680,7 +680,7 @@ You can select the environment you want to create and pass the parameters needed
 
 The developers can use the Dev Box portal to deploy their environment but if they prefer they can use [Azure Developer CLI][azd-link] (azd) which is just one config file to add to their project to be able to deploy the environment using the CLI.
 
-## Act as an Ops
+## Act as a project administrator
 
 Let's act as an ops to see the deployment environments created by the developers.
 
