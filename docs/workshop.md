@@ -362,6 +362,22 @@ You have now created two Dev Box pools, one for the frontend and one for the bac
 
 </details>
 
+## Assign an identity to the project
+
+Go to the **Settings** tab and click on **Identity** and add a System Assigned Managed Identity:
+
+![Project identity](assets/project-identity.png)
+
+Wait for the identity to be created.
+
+This will be used for the project to be able to interact with other Azure services such as the Key Vault that you will need later.
+
+Go to the resource group and open the Key Vault. In the **Access policies** tab, add a new access policy for the project identity (`prj-ops-<your-initials>`) with the following permissions:
+
+- **Secret permissions**: `Get` and `List`
+
+Click on **Create**, you have now given the project identity the permissions to get and list secrets from the Key Vault.
+
 ## Autorized customizations
 
 At this point, you have created a project with Dev Box pools for the frontend and the backend developers. Those Dev Box pools provide default configuration for your developers. However, you may want to allow your developers to customize their Dev Boxes to meet their specific needs or to install additional tools. This is possible by authorizing customizations at the project level.
@@ -458,25 +474,19 @@ https://<YOUR-KEY-VAULT-NAME>.vault.azure.net/secrets/Pat
 
 Click on **Add** and you should see the catalog added to the project with a status of `Sync Successful`.
 
-</details>
-
-
-
-
-
-
-
-
-
-
-
 Now, the developers assigned to this project will be able to use the tasks defined in the catalog to customize their Dev Boxes.
 
-#### Test from a Developer perspective
+</details>
 
-Add the role `DevCenter DevBox User` to your self.
+## Act as a Developer
 
-Go to the [Dev Box Portal][dev-box-portal] and sign in.
+To see the Dev Box in action, you can act as a developer assigned to the project.
+
+In your project go to **Access control (IAM)** and add the role `DevCenter DevBox User` to your self.
+
+Go to the [Dev Box Portal][dev-box-portal] and sign in, you should see a button to create a new Dev Box and be able to pass a yaml file to customize your Dev Box similar to the one we saw previously.
+
+You can see the total number of Dev Boxes created per definitions in the **Manage** > **Dev box pools** section.
 
 [add-catalog-with-github-pat]: https://learn.microsoft.com/en-us/azure/deployment-environments/how-to-configure-catalog?tabs=GitHubRepoPAT#add-your-repository-as-a-catalog
 [dev-box-definition]: https://learn.microsoft.com/en-us/azure/dev-box/how-to-manage-dev-box-definitions
@@ -484,49 +494,48 @@ Go to the [Dev Box Portal][dev-box-portal] and sign in.
 
 ---
 
-# Lab 2 - Find title
+# Lab 2 - Manage deployment environments
 
-### Manage a project
+Dev Center allows you to create and manage deployment environments for your projects which is the Azure Deployment Environment service. 
 
-#### Assign an identity to the project
+Deployment environments are fully managed environments that can be customized to meet the needs of your developers based on Infra As Code (ARM, Bicep, Terraform, Pulumi). Developers can then deploy pre packaged environments in a safe and controlled way using the best practice of your company.
 
-Go to the **Settings** tab and click on **Identity** and add a System Assigned Managed Identity:
+## Add an environment to the project
 
-![Project identity](assets/project-identity.png)
+If you go to your Dev Center, in the **Environment Configuration** and then **Environment Type** section, you will see that 3 environments are already available: `dev`, `test`, and `prod`. Each environment can be linked to a specific subscription but for this lab, you will use the same subscription for all the environments.
 
-Wait for the identity to be created.
+Those environments are the only ones available for all the projects linked to the Dev Center. Each project can refer to one or more of these environments. You can give different permissions to the developers to each environment for each project.
 
-This will be used for...
+In fact, you can imagine scenarios where developers will have more rights in the `dev` environment than in the `prod` environment.
 
-#### Add an environment to the project
+<div class="task" data-title="Tasks">
 
-Link the environments available in the Dev Center to the project.
+> Link the 3 environments available in the Dev Center to your project.
+> Set the following permissions to your developers for each environment:
+> - In `dev` environment the `Owner` role
+> - In `test` environment the `Contributor` role
+> - In `prod` environment the `Reader` role
 
-In your project, go to **Environment Configuration** and then **Environment Type**. In this section we will link the environments available in the Dev Center to the project. 
+</div>
+
+<details>
+<summary>📚 Toggle solution</summary>
+
+In your project, go to **Environment Configuration** and then **Environment Type**. In this section you will link the environments available in the Dev Center to the project. 
 
 Click on **Add**, you will be redirected to a form where you can select the environment you want to link to the project.
-
-You have 3 environments available:
-- dev
-- test
-- prod
-
-You can give to your users different permissions to each environment. Let's say that for this project you want to give the following permissions to your developers:
-- In dev the `Owner` role
-- In test the `Contributor` role
-- In prod the `Reader` role
-
-In fact...
 
 So for each environment, select the role you want to give to your developers and click on **Add**.
 
 ![Project environment](assets/project-link-environment.png)
 
-If everything is ok, you should see the environments linked to the project:
+If everything is ok, you should see the 3 environments linked to the project in the **Environment Type** section:
 
 ![Project environment linked](assets/project-environment-linked.png)
 
-#### Add a catalog to the project
+</details>
+
+## Add a catalog to the project
 
 As you saw in the previous lab, you can add a catalog to a project to allow developers to customize their Dev Boxes.
 However, catalog can also be used to define the Azure environments that will be available in the project. These catalogs are used by Azure Deployment Environment to create the environments using the same [portal][dev-box-portal] as the Dev Boxes.
@@ -551,7 +560,7 @@ You can also use Terraform and Pulumi to define your environments.
 
 More examples are available in the [official catalog][ade-official-catalog]
 
-#### Create a catalog 
+## Create a catalog 
 
 Create your own catalog. In your own GitHub account, create a new repository and in an `CustomEnvironments` folder create an `Apim` folder the following files:
 
@@ -604,7 +613,7 @@ Of course the deployment can be more complex, with multiple bicep files and modu
 
 Now, you can add this catalog to the project in the same way you did for the Dev Box catalog.
 
-#### In the Developer shoes
+## Act as a Developer
 
 Add the role `Deployment Environments User` to your self.
 
@@ -612,7 +621,7 @@ Go to the [Dev Box Portal][dev-box-portal] and sign in.
 
 ![Dev Box Portal Environment Creation](assets/dev-box-portal-environment-created.png)
 
-###  In the Ops / Admin shoes
+## Act as an Ops
 
 Add the role `DevCenter Project Admin` to your self at the project level.
 
