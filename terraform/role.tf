@@ -16,3 +16,10 @@ resource "azurerm_role_assignment" "users_key_vault_secret_user" {
   role_definition_name = "Key Vault Secrets User"
   principal_id         = azuread_user.this[each.key].id
 }
+
+resource "azurerm_role_assignment" "dev_center_rg" {
+  for_each             = local.users_index
+  scope                = azurerm_resource_group.this.id
+  role_definition_name = "Contributor"
+  principal_id         = azuread_user.this[each.key].id
+}

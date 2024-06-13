@@ -37,10 +37,10 @@ Before starting this lab, be sure to set your Azure environment :
 - An Azure Subscription with the **Owner** role to create and manage the labs' resources and deploy the infrastructure as code
 - Register the Azure providers on your Azure Subscription if not done yet: `Microsoft.DevCenter`, `Microsoft.KeyVault`, `Microsoft.ApiManagement`, `Microsoft.Web`.
 
-To be able to do the lab content :
+To be able to do the lab content you will also need:
 
 - A Github account (Free, Team or Enterprise)
-- Create a [fork][repo-fork] of the repository from the **main** branch to help you keep track of your changes
+- Create a [fork][repo-fork] of the repository from the **main** branch to help you keep track of your potential changes
 
 
 3 development options are available:
@@ -104,12 +104,11 @@ The following tools and access will be necessary to run the lab in good conditio
 
 Once you have set up your local environment, you can clone the Hands-on Lab Platform engineering for Ops repo you just forked on your machine, and open the local folder in Visual Studio Code and head to the next step. 
 
-### 🔑 Sign in to Azure
+## 🔑 Sign in to Azure
 
 <div class="task" data-title="Task">
 
 > - Log into your Azure subscription in your environment using Azure CLI and on the [Azure Portal][az-portal] using your credentials.
-> - Instructions and solutions will be given for the Azure CLI, but you can also use the Azure Portal if you prefer.
 
 </div>
 
@@ -155,13 +154,16 @@ First, you need to initialize the terraform infrastructure by running the follow
 cd terraform && terraform init
 ```
 
-If you wan't to create multiple users for the lab, you can create a `env.tfvars` file and change set the `number_of_users` variable to the number of users you want to create.
+If you wan't to create multiple users for the lab, you can create an `env.tfvars` file inside the `terraform` folder and update it with this template:
 
 ```js
+user_group_name       = "YOUR-WORKSHOP-GROUP-NAME"
 domain_name           = "example.onmicrosoft.com"
 user_default_password = "SET_YOUR_PASSWORD_HERE"
 number_of_users       = 20
 ```
+
+Make sure to create an empty group of users inside Microsoft Entra Id with the same name provided in the `user_group_name` variable.
 
 Then run the following command to deploy the infrastructure:
 
@@ -172,13 +174,13 @@ terraform plan -out plan.out -var-file env.tfvars
 terraform apply plan.out
 ```
 
-The deployment should take around 2 minutes to complete.
+The deployment should take a few minutes to complete.
 
 ## Create a GitHub PAT
 
 To be able to use the Catalogs features in Azure Dev Center, you need to create a GitHub Personal Access Token (PAT) with the following permissions:
 
-In GitHub, select the profile image, and then select Settings. On the left sidebar, select **Developer settings** > **Personal access tokens** > **Fine-grained tokens**, Select **Generate new token**.
+In GitHub, select the profile image, and then select Settings. On the left sidebar, select **Developer settings** > **Personal access tokens** > **Fine-grained tokens**, select **Generate new token**.
 
 On the New fine-grained personal access token page, provide the following information:
 
@@ -188,7 +190,7 @@ In `Repository access` select **All repositories**, then expand `Repository perm
 
 Then click on **Generate token**. If you need more information on this mechanism you can refer to the [official documentation][az-dev-center-github-pat].
 
-Now, open the resource group deploy with Terraform previously and open the Key Vault. In the **Secrets** tab, you will find a secret named Pat, click on it and then select **New Version** and update the value with your GitHub Token:
+Now, open the resource group deployed previously and open the Key Vault. In the **Secrets** tab, you will find a secret named `Pat`, click on it and then select **New Version** and update the value with your GitHub PAT:
 
 ![Key Vault Pat](assets/key-vault-pat.png)
 
@@ -198,7 +200,7 @@ Finally, in the Dev Center, go to **Settings** and then **Configuration** and Cl
 
 ![Enable Catalog per projects](assets/dev-center-enable-catalog-per-project.png)
 
-Validate the change and you are ready for the lab.
+Click on **Apply** and you are ready for the lab!
 
 [az-cli-install]: https://learn.microsoft.com/en-us/cli/azure/install-azure-cli
 [az-dev-center-github-pat]: https://learn.microsoft.com/en-us/azure/deployment-environments/how-to-configure-catalog?tabs=GitHubRepoPAT#add-a-catalog
