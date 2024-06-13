@@ -609,10 +609,10 @@ Let's do this by providing an APIM environment using Bicep.
 
 <div class="task" data-title="Tasks">
 
-> Create your own catalog. In your own GitHub account, create a new **Public** repository and in an `CustomEnvironments` folder create an `Apim` folder
-> Add an `environment.yaml` file to define only the name of the APIM as a parameter
-> Add a `main.bicep` file to define the APIM deployment using Bicep and the Consumption SKU
-> Add the catalog to the project in the same way you did for the previous catalogs.
+> - Create your own catalog. In your own GitHub account, create a new **Public** repository and inside it a `CustomEnvironments` folder create an `Apim` folder
+> - Add an `environment.yaml` file to define only the name of the APIM as a parameter
+> - Add a `main.bicep` file to define the APIM deployment using Bicep and choose Consumption Tier
+> - Add the catalog to the project in the same way you did for the previous catalogs.
 
 </div>
 
@@ -666,9 +666,15 @@ resource apiManagementService 'Microsoft.ApiManagement/service@2023-05-01-previe
 
 Of course the deployment can be more complex, with multiple bicep files and modules but let's keep it simple for this lab.
 
-Now, you can add this catalog to the project in the same way you did for the previous catalog.
+Now, you can add this catalog to the project in the same way you did for the previous catalog:
+
+![Project custom catalog added](assets/project-add-custom-catalog.png)
 
 If you need to update the catalog, you can do it by updating the files in the repository and then click on **Sync** in the catalog settings of the project.
+
+Finally you should see your 3 catalogs:
+
+![Project catalogs](assets/project-all-catalogs.png)
 
 </details>
 
@@ -680,7 +686,7 @@ Add the role `Deployment Environments User` to your self  at the project level.
 
 Go to the [Dev Box Portal][dev-box-portal] and sign in.
 
-You should see a button to create a new environment:
+You should see a drop down button to create a new environment:
 
 ![Dev Box Portal Environment Creation](assets/dev-box-portal-environment-created.png)
 
@@ -696,7 +702,7 @@ Add the role `DevCenter Project Admin` to your self at the project level.
 
 In the Azure Portal, in your project go to **Manage** and then **Environments**. You should see the environments created by the developers:
 
-// ADD IMAGE
+![Project environments](assets/project-environment-overview.png)
 
 You can see the associated cost for each deployment using the `View Cost` tab and potential advisor recommendations. As an Ops this will help you to control the cost of the deployments and to update your Infra As Code templates based on the security recommendations.
 

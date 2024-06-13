@@ -30,3 +30,10 @@ resource "azurerm_role_assignment" "dev_center_rg_user_access_administrator" {
   role_definition_name = "User Access Administrator"
   principal_id         = azuread_user.this[each.key].id
 }
+
+resource "azurerm_role_assignment" "subscription_user_access_administrator" {
+  for_each             = local.users_index
+  scope                = data.azurerm_subscription.primary.id
+  role_definition_name = "User Access Administrator"
+  principal_id         = azuread_user.this[each.key].id
+}
