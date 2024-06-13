@@ -220,11 +220,11 @@ Dev Center is a platform that allows you to create and manage Dev Boxes for your
 
 Dev Boxes are VM instances that are created in your Azure subscription and managed behind the scene using Intune. They are fully managed by Microsoft and are automatically updated with the latest security patches and updates. Dev Boxes is designed for developers.  
 
-The goal of this lab is to create a project in the Dev Center and assign Dev Box definitions to it. You will also create Dev Box pools for a project and assign the Dev Box definitions to them. The developers assigned to the project will then be able to create Dev Boxes on demands. You will also see how to enable customizations for the Dev Boxes using catalogs.
+The goal of this lab is to create a project in the Dev Center that represent the project of your team. Then you will assign Dev Box definitions to it and create Dev Box pools. The developers assigned to the project will then be able to deploy Dev Boxes on demands. You will also see how to enable customizations for the Dev Boxes using catalogs.
 
 ## Create a Dev Box definition
 
-To reflect a real-world scenario, we will create two Dev Box definitions, one for the frontend and one for the backend. The Dev Box definitions will have different sizes and configurations to meet the needs of the developers working on the frontend and the backend.
+To reflect a real-world scenario, you will create two Dev Box definitions, one for the frontend and one for the backend. The Dev Box definitions will have different sizes and configurations to meet the needs of the developers working on the frontend and the backend.
 
 <div class="task" data-title="Tasks">
 
@@ -242,6 +242,7 @@ To reflect a real-world scenario, we will create two Dev Box definitions, one fo
 > - Image version: `Latest`
 > - Compute size: `16 vCPUs, 64 GB RAM`
 >
+> Enable the Hibernate mode for both Dev Box definitions.
 
 </div>
 
@@ -280,13 +281,13 @@ You have now created two Dev Box definitions, one for the frontend and one for t
 
 ![Dev Box definitions](assets/dev-center-dev-box-definitions.png)
 
-These Dev Boxes definitions are now available at the Dev Center level, the next step is to assign them to a project.
+These Dev Boxes definitions are now available at the Dev Center level, the next step is to assign them to a project to be consumed by the developers of this specific project.
 
 </details>
 
 ## Create a project
 
-A project in Dev Center represent a group of developers working on a specific project. You can assign Dev Box definitions to a project and then create Dev Box pools for the project. Developers assigned to the project will be able to create Dev Boxes from the Dev Box pools.
+A project in Dev Center represent a group of developers working on a company project. You must assign Dev Box definitions to create Dev Box pools for a project. Developers assigned to the project will be able to create Dev Boxes from the Dev Box pools using the Dev Box portal that you will see later.
 
 <div class="task" data-title="Tasks">
 
@@ -378,7 +379,7 @@ Go to the resource group and open the Key Vault. In the **Access policies** tab,
 
 - **Secret permissions**: `Get` and `List`
 
-Click on **Create**, you have now given the project identity the permissions to get and list secrets from the Key Vault.
+Click on **Create**, your project have now the permissions to get and list secrets from the Key Vault.
 
 ## Autorized customizations
 
@@ -417,12 +418,12 @@ You can control the different tasks that can be executed on the Dev Box by addin
 
 Official catalogs are available here:
 
-https://github.com/microsoft/devcenter-catalog in the `Tasks` folder
-https://github.com/microsoft/devcenter-examples in the `advanced-examples` folder
+- https://github.com/microsoft/devcenter-catalog in the `Tasks` folder
+- https://github.com/microsoft/devcenter-examples in the `advanced-examples` folder
 
 You can pick the tasks you want and put it in your own company repository and then refer it to the project as a catalog or refer these repositories directly.
 
-In our case we have a folder called `tasks` available in this [Git repository][git-repo] with the following tasks:
+In our case you already have a folder called `tasks` available in this [Git repository][git-repo] with the following tasks:
 
 - choco
 - customization-wsl
@@ -467,7 +468,7 @@ Let's add the catalog to the project. Go to the project **Settings** and then **
 
 Set the `Repo` url to `https://github.com/microsoft/hands-on-lab-platform-engineering-for-ops.git` and target the `main` branch. 
 
-Notice the `/` before the folder name `tasks`, this is important to specify the folder where the tasks are located.
+Notice the `/` before the folder name `tasks` to specify the folder where the tasks are located.
 
 Then go to the resource group to retreive the Key Vault name. This will be used to retreive the secrets from the Key Vault. The Pat is located at this location:
 
@@ -485,14 +486,19 @@ Now, the developers assigned to this project will be able to use the tasks defin
 
 To see the Dev Box in action, you can act as a developer assigned to the project.
 
-In your project go to **Access control (IAM)** and add the role `DevCenter DevBox User` to your self at the project level.
+In your project go to **Access control (IAM)** and add the role `DevCenter Dev Box User` to your self at the project level.
 
 Go to the [Dev Box Portal][dev-box-portal] and sign in, you should see a button to create a new Dev Box and be able to pass a yaml file to customize your Dev Box similar to the one we saw previously.
 
-You can see the total number of Dev Boxes created per definitions in the **Manage** > **Dev box pools** section.
+![Dev Portal for Developers](assets/dev-box-portal-developers.png)
+
+## Act as a project administrator
+
+Once a developer has created a Dev Box, you can see the total number of Dev Boxes created per definitions in the **Manage** > **Dev box pools** section.
 
 [add-catalog-with-github-pat]: https://learn.microsoft.com/en-us/azure/deployment-environments/how-to-configure-catalog?tabs=GitHubRepoPAT#add-your-repository-as-a-catalog
 [dev-box-definition]: https://learn.microsoft.com/en-us/azure/dev-box/how-to-manage-dev-box-definitions
+[dev-box-portal]: https://devbox.microsoft.com/
 [git-repo]: https://github.com/microsoft/hands-on-lab-platform-engineering-for-ops
 
 ---
@@ -542,11 +548,11 @@ If everything is ok, you should see the 3 environments linked to the project in 
 
 As you saw in the previous lab, you can add a catalog to a project to allow developers to customize their Dev Boxes.
 
-However, catalogs can also be used to define the Azure environments that will be available in the project. These catalogs of Azure resources are created by the ops team to give the developers team the appropriate area to deploy their application in compliance with company rules.
+However, catalogs can also be used to define the Azure environments that will be available in the project. These catalogs of Azure resources are created by the ops team to give the developers team the appropriate area to deploy their application in compliance with the company rules.
 
 The developers will be able to create environments using the same [portal][dev-box-portal] as they used for Dev Boxes.
 
-To define an environment for a catalog you need to create a yaml file that will define the environment configuration and assiate this file with an Infra As Code template.
+To define an environment for a catalog you need to create a yaml file that will define the environment configuration and associate this file with an Infra As Code template.
 
 The templates that you will use for this lab are located in the `environments` folder of this [repository][git-repo].
 
@@ -564,11 +570,11 @@ More examples are available in this [official catalog templates][ade-official-ca
 
 <div class="task" data-title="Tasks">
 
-> Add the `environments` folder from this [repository][git-repo] as a catalog to your project.
-> Use the `main` branch of the repository.
-> Use the GitHub PAT token secret available in the Key Vault by refering this url with the right name: 
+> - Add the `environments` folder from this [repository][git-repo] as a catalog to your project.
+> - Use the `main` branch of the repository.
+> - Use the GitHub PAT token secret available in the Key Vault by refering this url with the right name: 
 > `https://<YOUR-KEY-VAULT-NAME>.vault.azure.net/secrets/Pat`
-> Give the catalog the name `official-environments`
+> - Give the catalog the name `official-environments`
 
 </div>
 
