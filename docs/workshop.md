@@ -13,7 +13,7 @@ contacts: # Required. Must match the number of authors
   - "@fethidilmi"
   - "@damienaicheh"
 duration_minutes: 180
-tags: azure, dev center, azure deployment environment, microsoft dev box, azure policies, ops, csu
+tags: azure, dev center, azure deployment environment, microsoft dev box, azure policies, github, ghas, ops, csu
 navigation_levels: 3
 ---
 
@@ -715,6 +715,224 @@ You can see the associated cost for each deployment using the `View Cost` tab an
 
 # Lab 3 
 
+
+---
+
+# Lab 4: Use GitHub Advanced Security
+
+In this lab you will discover how GitHub Advanced Security (GHAS) can improve the security in your repositories without slowing development of your teams.
+
+This cover 3 main pilars:
+
+- Dependabot
+- Code scanning
+- Secret scanning
+
+Dependabot serves as an automated dependency management tool, ensuring that project dependencies remain current. It actively monitors libraries and frameworks utilized in a project, automatically creating pull requests to update dependencies to their most recent secure versions. By addressing vulnerabilities in outdated dependencies, Dependabot contributes to maintaining a secure and stable development environment.
+
+Code scanning plays a crucial role in GitHub Advanced Security, examining source code for security vulnerabilities and coding mistakes. It utilizes static analysis methods to detect potential issues like SQL injection, cross-site scripting, and buffer overflows. By delivering automated feedback directly in the pull request workflow, code scanning empowers developers to tackle vulnerabilities early in the development lifecycle.
+
+Secret scanning detects and mitigates inadvertent exposure of sensitive information like API keys and tokens within source code. By searching for predefined patterns and signatures associated with sensitive data, secret scanning promptly addresses potential security risks. It defaults to accurate patterns provided by a GitHub Partner, but custom patterns can be created for specific use cases. Notably, secret scanning includes push protection, which proactively prevents secret leaks during code commits, and provides an easy way to view and remediate alerts directly within GitHub.
+
+Let's try these features!
+
+<div class="task" data-title="Tasks">
+
+> - Create a GitHub **public** repository in your own GitHub Account.
+
+</div>
+
+All the features that you will see in this lab can be control globally in a GitHub Enterprise Organisation. For the purpose of this lab you will use a public repository to be able to access those features.
+
+## Dependabot
+
+Let's activate Dependabot in your repository, go to **Settings** > **Code security and analysis** and enable **Dependabot alerts** and **Dependabot security updates**:
+
+![Enable Dependabot](assets/ghas-enable-dependabot.png)
+
+Let's simulate a node project by adding 2 files to your repository:
+
+<details>
+<summary>📄 package.json </summary>
+
+```json
+{
+    "name": "ghas_demo",
+    "version": "1.0.0",
+    "description": "demo project",
+    "license": "MIT",
+    "scripts": {
+        "start": "node main.js"
+    },
+    "dependencies": {
+        "axios": "0.21.1",
+        "minimist": "1.2.5"
+    }
+}
+```
+</details>
+
+<details>
+<summary>📄 package-lock.json </summary>
+
+```json
+{
+    "name": "ghas_demo",
+    "version": "1.0.0",
+    "lockfileVersion": 3,
+    "requires": true,
+    "packages": {
+        "": {
+            "name": "ghas_demo",
+            "version": "1.0.0",
+            "license": "MIT",
+            "dependencies": {
+                "axios": "0.21.1",
+                "minimist": "1.2.5"
+            }
+        },
+        "node_modules/axios": {
+            "version": "0.21.1",
+            "resolved": "https://registry.npmjs.org/axios/-/axios-0.21.1.tgz",
+            "integrity": "sha512-dKQiRHxGD9PPRIUNIWvZhPTPpl1rf/OxTYKsqKUDjBwYylTvV7SjSHJb9ratfyzM6wCdLCOYLzs73qpg5c4iGA==",
+            "dependencies": {
+                "follow-redirects": "^1.10.0"
+            }
+        },
+        "node_modules/follow-redirects": {
+            "version": "1.15.6",
+            "resolved": "https://registry.npmjs.org/follow-redirects/-/follow-redirects-1.15.6.tgz",
+            "integrity": "sha512-wWN62YITEaOpSK584EZXJafH1AGpO8RVgElfkuXbTOrPX4fIfOyEpW/CsiNd8JdYrAoOvafRTOEnvsO++qCqFA==",
+            "funding": [
+                {
+                    "type": "individual",
+                    "url": "https://github.com/sponsors/RubenVerborgh"
+                }
+            ],
+            "engines": {
+                "node": ">=4.0"
+            },
+            "peerDependenciesMeta": {
+                "debug": {
+                    "optional": true
+                }
+            }
+        },
+        "node_modules/minimist": {
+            "version": "1.2.5",
+            "resolved": "https://registry.npmjs.org/minimist/-/minimist-1.2.5.tgz",
+            "integrity": "sha512-FM9nNUYrRBAELZQT3xeZQ7fmMOBg6nWNmJKTcgsJeaLstP/UODVpGsr5OhXhhXg6f+qtJ8uiZ+PUxkDWcgIXLw=="
+        }
+    }
+}
+```
+</details>
+
+If you go to the **Insights** tab and then **Dependency graph** you should see the details of all depencies of your project and also alerts or warning if some of them are not up to date:
+
+![Dependency Graph](assets/ghas-dependency-graph.png)
+
+As you can see two packages `minimist` and `axios` are not up to date and present risks.
+
+In parallel, if you go to the **Security** tab in the **Dependabot** section you can see that 3 alerts regarding those outdated packages has been raised. Most importantly, ``Dependabot alert`` has already suggested a Pull Request to fix those issues:
+
+![Dependabot Alerts](assets/ghas-dependabot-alerts.png)
+
+Dependabot alerts inform you when your code depends on a package that is insecure. These Dependabot alerts reference the [GitHub Advisory Database][github-advisory-db]. This list of known security vulnerabilities and malware groupe two categories: **GitHub reviewed advisories** and **unreviewed advisories**.
+
+For each alert `Dependabot security updates` has beed used to give you more details on the alert:
+
+![Security Details](assets/ghas-alert-detail.png)
+
+Then you can click on the **Review security update** which will redirect you to the associated Pull Request.
+
+<div class="task" data-title="Tasks">
+
+> - Validate one of the Pull Requests 
+> - The number of security issues should decrease automatically
+
+</div>
+
+Now let's activate another feature called `Dependabot version updates`.
+
+First, add a new file called `sandbox-workflow.yaml` inside the `.github/workflows` with the content provided below.
+
+<details>
+<summary>📄sandbox-workflow.yaml</summary>
+
+```yaml
+name: Sandbox
+on:
+  workflow_dispatch:
+  
+jobs:
+  get_current_step:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Hello
+        run: echo Hello World
+```
+
+</details>
+
+As you probably already noticed, the action `actions/checkout` is outdated and should have a version greater than 3, let's see how `Dependabot version updates` can help you on that.
+
+Navigate to the **Settings** tab and select **Code security and analysis** and enable **Dependabot version updates**.
+You will be redirected to a YAML editor to define a file called `dependabot.yml`. This file allows you to configure dependabot to check dependencies of your different package manager and raise a ....
+
+<div class="task" data-title="Tasks">
+
+> - Define a daily check on github actions packages
+> - Define a weekly check on npm packages
+
+</div>
+
+<div class="tip" data-title="Tips">
+
+> [Dependabot YAML Configuration][dependabot-yaml-configuration]<br>
+
+</div>
+
+<details>
+<summary>📚 Toggle solution</summary>
+
+In a file called `dependabot.yml` inside the `.github` folder define the 2 rules:
+
+```yaml
+version: 2
+updates:
+ - package-ecosystem: "github-actions"
+   directory: "/"
+   schedule:
+     interval: "daily"
+ - package-ecosystem: "npm"
+   directory: "/"
+   schedule:
+     interval: "weekly"
+```
+
+Commit this file and after a few minutes you should see a new Pull Request automatically created to suggest the update to the latest version of the `actions/checkout`.
+
+![GitHub Actions Pull Request](assets/ghas-github-actions-pull-request.png)
+
+</details>
+
+In this first section you have learned how to:
+
+- View and use dependency graph.
+- Enable and use Dependabot alerts.
+- Enable and use Dependabot security updates.
+- Enable and use Dependabot version updates.
+
+## Code scanning
+
+## Secret scanning
+
+[github-advisory-db]: https://github.com/advisories
+[dependabot-yaml-configuration]: https://docs.github.com/en/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file
 
 ---
 
