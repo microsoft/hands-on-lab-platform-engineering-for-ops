@@ -918,6 +918,8 @@ Commit this file and after a few minutes you should see a new Pull Request autom
 
 ![GitHub Actions Pull Request](assets/ghas-github-actions-pull-request.png)
 
+You can then review the changes and accept the Pull Request.
+
 </details>
 
 In this first section you have learned how to:
@@ -929,10 +931,109 @@ In this first section you have learned how to:
 
 ## Code scanning
 
+### Activate Code Scanning
+
+Code scanning is a feature of GitHub Advanced Security that helps you find and fix security vulnerabilities in your code. It scans your code as you pull requests are created and alerts you of any vulnerabilities found.
+
+Let's create an empty file called `main.js` in your repository. You will add some code to this file later.
+
+To enable code scanning, go to the **Settings** tab and select **Code security and analysis**, then go to **Code scanning** inside and select **Set up**.
+
+![Enable Code Scanning](assets/ghas-enable-code-scanning.png)
+
+Then you will be redirected to the **Code scanning** tab where you can see the status of the code scanning and the alerts raised.
+
+In the **Languages to analyze** you should have `JavaScript/TypeScript` selected.
+
+In the **Query suites** CodeQL [queries][code-ql-query] are packaged in bundles called "suites". This section allows you to choose which query suite to use.  Leave it set as **Default** for this exercise.
+
+The **Events** section defines when CodeQL should scan. In this case, it's set to scan on any pull request to the `main` branch.
+
+![Code Scanning Configuration](assets/ghas-code-scanning-configuration.png)
+
+### Detect a vulnerability
+
+Now let's add some code to the `main.js` file directly on ``main` branch to raise a vulnerability:
+
+```js
+var app = require('express')();
+
+app.get('/user/:id', function(req, res) {
+	let id = req.params.id;
+	id = id.replace(/<|>/g, ""); // BAD
+	let userHtml = `<div data-id="${id}">${getUserName(id) || "Unknown name"}</div>`;
+	// ...
+	res.send(prefix + userHtml + suffix);
+});
+```
+
+Go to the **Actions** tab and you should see a new workflow called `CodeQL` running. This workflow is responsible for scanning the code and raising alerts. 
+
+At the end of the execution of this workflow, you will see a new alert raised inside the **Security** panel of your repository, in the **code scanning** section.
+
+![Code Scanning Issue raised](assets/ghas-code-scanning-issue-raised.png)
+
+Select it to see the details of the vulnerability raised:
+
+![Code Scanning Issue Details](assets/ghas-audit-details.png)
+
+You can see different important information:
+
+- **Alert status:** This section displays the current alert status (open or closed), identifies the affected branch and shows the timestamp of the alert.
+
+- **Paths:** Clicking on "Show paths" will give you additional insights regarding the flow of data through your application. 
+
+- **Recommendations:** If you click on **Show more**, you will see more details and examples on how to resolve this issue, as well as links to additional resources.
+
+- **Additional info:** Finally, the right-side panel contains information such as tags, CWE information, and the severity of the alert.
+
+On the right side of the alert, you can directly create an issue from the alert to track the resolution of the vulnerability. Also, you can dismiss the alert if you think it's a false positive.
+
+### Pull Request Analysis
+
+Edit the `main.js` file to add the following code and create a new Pull Request:
+
+```js
+const app = require("express")(),
+      pg = require("pg"),
+      pool = new pg.Pool(config);
+
+app.get("search", function handler(req, res) {
+  // BAD: the category might have SQL special characters in it
+  var query1 =
+    "SELECT ITEM,PRICE FROM PRODUCT WHERE ITEM_CATEGORY='" +
+    req.params.category +
+    "' ORDER BY PRICE";
+  pool.query(query1, [], function(err, results) {
+    // process results
+  });
+});
+```
+
+Click **Commit changes...** from the top right. The "Propose changes" window will pop up.
+Select the radio button next to **Create a new branch**. You can create a new name for this branch or leave it as the default suggestion.
+Click **Propose changes**, this opens a new pull request, finally click **Create pull request**.
+
+After a few minutes you should see a new alerts raised by a GitHub Action Workflow which analyse the new code and directly update the Pull Request with comments like this one:
+
+![CodeQL Alert Raised](assets/ghas-codeql-alert-raised.png)
+
+The vulnerability raised is a Database query built from user-controlled sources which can lead to SQL Injection.
+
+More information about this vulnerability is available [here][codeql-sql-injection]
+
+As you can see, Code Scanning is a powerful tool to detect vulnerabilities in your code but also to raise alerts directly in the Pull Request to help developers to fix them before the code is going to production.
+
 ## Secret scanning
 
-[github-advisory-db]: https://github.com/advisories
+
+
+
+[codeql-sql-injection]: https://codeql.github.com/codeql-query-help/javascript/js-sql-injection/
+[code-ql-query]:https://docs.github.com/en/code-security/code-scanning/automatically-scanning-your-code-for-vulnerabilities-and-errors/about-code-scanning-with-codeql#about-codeql-queries
 [dependabot-yaml-configuration]: https://docs.github.com/en/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file
+[github-advisory-db]: https://github.com/advisories
+
 
 ---
 
