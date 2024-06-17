@@ -722,17 +722,17 @@ You can see the associated cost for each deployment using the `View Cost` tab an
 
 In this lab you will discover how GitHub Advanced Security (GHAS) can improve the security in your repositories without slowing development of your teams.
 
-This cover 3 main pilars:
+You will cover 3 main pilars:
 
 - Dependabot
 - Code scanning
 - Secret scanning
 
-Dependabot serves as an automated dependency management tool, ensuring that project dependencies remain current. It actively monitors libraries and frameworks utilized in a project, automatically creating pull requests to update dependencies to their most recent secure versions. By addressing vulnerabilities in outdated dependencies, Dependabot contributes to maintaining a secure and stable development environment.
+**Dependabot** serves as an automated dependency management tool, ensuring that project dependencies remain current. It actively monitors libraries and frameworks utilized in a project, automatically creating pull requests to update dependencies to their most recent secure versions. By addressing vulnerabilities in outdated dependencies, Dependabot contributes to maintaining a secure and stable development environment.
 
-Code scanning plays a crucial role in GitHub Advanced Security, examining source code for security vulnerabilities and coding mistakes. It utilizes static analysis methods to detect potential issues like SQL injection, cross-site scripting, and buffer overflows. By delivering automated feedback directly in the pull request workflow, code scanning empowers developers to tackle vulnerabilities early in the development lifecycle.
+**Code scanning** plays a crucial role in GitHub Advanced Security, examining source code for security vulnerabilities and coding mistakes. It utilizes static analysis methods to detect potential issues like SQL injection, cross-site scripting, and buffer overflows. By delivering automated feedback directly in the pull request workflow, code scanning empowers developers to tackle vulnerabilities early in the development lifecycle.
 
-Secret scanning detects and mitigates inadvertent exposure of sensitive information like API keys and tokens within source code. By searching for predefined patterns and signatures associated with sensitive data, secret scanning promptly addresses potential security risks. It defaults to accurate patterns provided by a GitHub Partner, but custom patterns can be created for specific use cases. Notably, secret scanning includes push protection, which proactively prevents secret leaks during code commits, and provides an easy way to view and remediate alerts directly within GitHub.
+**Secret scanning** detects and mitigates inadvertent exposure of sensitive information like API keys and tokens within source code. By searching for predefined patterns and signatures associated with sensitive data, secret scanning promptly addresses potential security risks. It defaults to accurate patterns provided by a GitHub Partner, but custom patterns can be created for specific use cases. Notably, secret scanning includes push protection, which proactively prevents secret leaks during code commits, and provides an easy way to view and remediate alerts directly within GitHub.
 
 Let's try these features!
 
@@ -742,7 +742,7 @@ Let's try these features!
 
 </div>
 
-All the features that you will see in this lab can be control globally in a GitHub Enterprise Organisation. For the purpose of this lab you will use a public repository to be able to access those features.
+All the features that you will see in this lab can be control globally in a GitHub Enterprise Organisation.
 
 ## Dependabot
 
@@ -750,7 +750,11 @@ Let's activate Dependabot in your repository, go to **Settings** > **Code securi
 
 ![Enable Dependabot](assets/ghas-enable-dependabot.png)
 
-Let's simulate a node project by adding 2 files to your repository:
+<div class="task" data-title="Tasks">
+
+> - Simulate a node project by adding 2 files to your repository directly on the `main` branch:
+
+</div>
 
 <details>
 <summary>📄 package.json </summary>
@@ -834,11 +838,11 @@ If you go to the **Insights** tab and then **Dependency graph** you should see t
 
 As you can see two packages `minimist` and `axios` are not up to date and present risks.
 
-In parallel, if you go to the **Security** tab in the **Dependabot** section you can see that 3 alerts regarding those outdated packages has been raised. Most importantly, ``Dependabot alert`` has already suggested a Pull Request to fix those issues:
+In parallel, if you go to the **Security** tab in the **Dependabot** section you can see that 3 alerts regarding those outdated packages has been raised. Most importantly, after a few seconds `Dependabot alert` has already detected the issues and suggested a Pull Request to fix those issues:
 
 ![Dependabot Alerts](assets/ghas-dependabot-alerts.png)
 
-Dependabot alerts inform you when your code depends on a package that is insecure. These Dependabot alerts reference the [GitHub Advisory Database][github-advisory-db]. This list of known security vulnerabilities and malware groupe two categories: **GitHub reviewed advisories** and **unreviewed advisories**.
+Dependabot alerts inform you when your code depends on a package that is insecure. These Dependabot alerts reference the [GitHub Advisory Database][github-advisory-db]. This list of known security vulnerabilities and malware group two categories: **GitHub reviewed advisories** and **unreviewed advisories**.
 
 For each alert `Dependabot security updates` has beed used to give you more details on the alert:
 
@@ -881,7 +885,7 @@ jobs:
 As you probably already noticed, the action `actions/checkout` is outdated and should have a version greater than 3, let's see how `Dependabot version updates` can help you on that.
 
 Navigate to the **Settings** tab and select **Code security and analysis** and enable **Dependabot version updates**.
-You will be redirected to a YAML editor to define a file called `dependabot.yml`. This file allows you to configure dependabot to check dependencies of your different package manager and raise a ....
+You will be redirected to a YAML editor to define a file called `dependabot.yml`. This file allows you to configure dependabot to check dependencies of your different package manager and dynamically create Pull Requests to update them.
 
 <div class="task" data-title="Tasks">
 
@@ -933,27 +937,31 @@ In this first section you have learned how to:
 
 ### Activate Code Scanning
 
-Code scanning is a feature of GitHub Advanced Security that helps you find and fix security vulnerabilities in your code. It scans your code as you pull requests are created and alerts you of any vulnerabilities found.
+Code scanning is a feature of GitHub Advanced Security that helps you find and fix security vulnerabilities in your code. It scans your code as well as your pull requests are created and alerts you about any vulnerabilities found.
 
 Let's create an empty file called `main.js` in your repository. You will add some code to this file later.
 
-To enable code scanning, go to the **Settings** tab and select **Code security and analysis**, then go to **Code scanning** inside and select **Set up**.
+To enable code scanning, go to the **Settings** tab and select **Code security and analysis**, then go to **Code scanning** inside and select **Set up** and **Default**.
 
 ![Enable Code Scanning](assets/ghas-enable-code-scanning.png)
-
-Then you will be redirected to the **Code scanning** tab where you can see the status of the code scanning and the alerts raised.
 
 In the **Languages to analyze** you should have `JavaScript/TypeScript` selected.
 
 In the **Query suites** CodeQL [queries][code-ql-query] are packaged in bundles called "suites". This section allows you to choose which query suite to use.  Leave it set as **Default** for this exercise.
 
-The **Events** section defines when CodeQL should scan. In this case, it's set to scan on any pull request to the `main` branch.
+The **Scan events** section defines when CodeQL should scan. In this case, it's set to scan on any pull request to the `main` branch.
+
+Click on **Enable CodeQL** and wait for the setup to be completed.
 
 ![Code Scanning Configuration](assets/ghas-code-scanning-configuration.png)
 
+You can see the status of the setup in the **CodeQL Setup** workflow in the **Action** tab:
+
+![Code Scanning Setup](assets/ghas-code-scanning-setup.png)
+
 ### Detect a vulnerability
 
-Now let's add some code to the `main.js` file directly on ``main` branch to raise a vulnerability:
+Now let's add some code to the `main.js` file directly on `main` branch to raise a vulnerability:
 
 ```js
 var app = require('express')();
@@ -967,7 +975,7 @@ app.get('/user/:id', function(req, res) {
 });
 ```
 
-Go to the **Actions** tab and you should see a new workflow called `CodeQL` running. This workflow is responsible for scanning the code and raising alerts. 
+Go back to the **Actions** tab and you should see a new workflow called `CodeQL` running. This workflow is responsible for scanning the code and raising alerts. 
 
 At the end of the execution of this workflow, you will see a new alert raised inside the **Security** panel of your repository, in the **code scanning** section.
 
@@ -977,7 +985,7 @@ Select it to see the details of the vulnerability raised:
 
 ![Code Scanning Issue Details](assets/ghas-audit-details.png)
 
-You can see different important information:
+You can see different important informations:
 
 - **Alert status:** This section displays the current alert status (open or closed), identifies the affected branch and shows the timestamp of the alert.
 
@@ -985,13 +993,13 @@ You can see different important information:
 
 - **Recommendations:** If you click on **Show more**, you will see more details and examples on how to resolve this issue, as well as links to additional resources.
 
-- **Additional info:** Finally, the right-side panel contains information such as tags, CWE information, and the severity of the alert.
+- **Additional info:** Finally, the right-side panel contains information such as tags, [CWE][cwe-official-documentation] information, and the severity of the alert.
 
-On the right side of the alert, you can directly create an issue from the alert to track the resolution of the vulnerability. Also, you can dismiss the alert if you think it's a false positive.
+On the right side of the alert, you can directly create an issue based on it, to track the resolution of the vulnerability. Also, you can dismiss the alert if you think it's a false positive.
 
 ### Pull Request Analysis
 
-Edit the `main.js` file to add the following code and create a new Pull Request:
+Edit the `main.js` file to add the following code and create a new Pull Request (There is no link between this code and the previous one, it's just for the purpose of this lab):
 
 ```js
 const app = require("express")(),
@@ -1014,26 +1022,55 @@ Click **Commit changes...** from the top right. The "Propose changes" window wil
 Select the radio button next to **Create a new branch**. You can create a new name for this branch or leave it as the default suggestion.
 Click **Propose changes**, this opens a new pull request, finally click **Create pull request**.
 
+The CodeQL workflow will run again directly on the Pull Request:
+
+![Code Scanning Pull Request](assets/ghas-pull-request.png)
+
 After a few minutes you should see a new alerts raised by a GitHub Action Workflow which analyse the new code and directly update the Pull Request with comments like this one:
 
 ![CodeQL Alert Raised](assets/ghas-codeql-alert-raised.png)
 
-The vulnerability raised is a Database query built from user-controlled sources which can lead to SQL Injection.
-
-More information about this vulnerability is available [here][codeql-sql-injection]
+The vulnerability raised is a Database query built from user-controlled sources which can lead to SQL Injection. More informations about this vulnerability is available [here][codeql-sql-injection]
 
 As you can see, Code Scanning is a powerful tool to detect vulnerabilities in your code but also to raise alerts directly in the Pull Request to help developers to fix them before the code is going to production.
 
 ## Secret scanning
 
+Secret scanning is a feature of GitHub Advanced Security that scans repositories for known secret formats and immediately notifies repository admins when secrets are found.
 
+Secret scanning is enabled by default for all public repositories.
 
+The main feature regarding secret scanning is the ability to block the push of a commit if a secret is found in the code.
+
+Let's create a file called `secrets.yaml` in your repository with the following content, do not forget to remove the `<REMOVEME>` block:
+
+```yaml
+default:
+  github-token: github_pat_<REMOVEME>11A4YXR6Y0v36CYFkuT5I1_ZRWX91c8k0waSN6x7AiVJ6zZ9ZHUQXBblBqFQpKd23V6CL7MWMPopnmBxzn
+  output: json
+  region: us-east-2
+```
+
+This file contains a fake GitHub PAT token that should be detected by the secret scanning. When you will try to push this file to the repository, the push will be blocked and you should see a message like this one:
+
+![Secret Scanning Push Blocked](assets/ghas-secret-push-protection.png)
+
+Select **It's used for tests** and commit the changes.
+
+If you go to the **Security** tab, you should see the alert raised by the secret scanning:
+
+![Secret scanning tab](assets/ghas-secret-scaning-tab.png)
+
+When you work in a local environment or a GitHub Codespace, secret scanning cannot block your commit but  your push to GitHub will be blocked. In this case, if the secret is active then you will need to remove the secret from your branch and commit history or revoke it.
+
+You can find all the patterns available for secret scanning in the official [documentation][github-secret-scanning-patterns-available].
 
 [codeql-sql-injection]: https://codeql.github.com/codeql-query-help/javascript/js-sql-injection/
 [code-ql-query]:https://docs.github.com/en/code-security/code-scanning/automatically-scanning-your-code-for-vulnerabilities-and-errors/about-code-scanning-with-codeql#about-codeql-queries
+[cwe-official-documentation]: https://cwe.mitre.org/
 [dependabot-yaml-configuration]: https://docs.github.com/en/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file
 [github-advisory-db]: https://github.com/advisories
-
+[github-secret-scanning-patterns-available]:https://docs.github.com/en/code-security/secret-scanning/secret-scanning-patterns
 
 ---
 
