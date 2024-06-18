@@ -1312,7 +1312,7 @@ Meanwhile, go back to the first network security group you created, if you try t
 
 </div>
 
-## Reading the Compliance Report
+## Reading the compliance report
 
 At the end of this workshop take a time to read the compliance report of your resources. You can find the compliance report in the **Policy** blade of the Azure Portal.
 
