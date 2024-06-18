@@ -39,6 +39,7 @@ Before starting this lab, be sure to set your Azure environment :
 
 To be able to do the lab content you will also need:
 
+- Basic understanding of Azure resources.
 - A Github account (Free, Team or Enterprise)
 - Create a [fork][repo-fork] of the repository from the **main** branch to help you keep track of your potential changes
 
@@ -716,29 +717,29 @@ You can see the associated cost for each deployment using the `View Cost` tab an
 # Lab 3 - Governance with Azure Policy
 
 ## Introduction
-In this lab, we will explore Azure Policy, a service in Azure that you use to create, assign and manage policies. These policies enforce different rules and effects over your resources, so those resources stay compliant with your corporate standards and service level agreements.
 
-There are few key concepts to understand before we start with the lab:
+In this lab, you will explore Azure Policy, a service in Azure that you use to create, assign and manage policies. These policies enforce different rules and effects over your resources, so those resources stay compliant with your corporate standards and service level agreements.
 
-- The first object to create when working with Azure Policies, is to create a **Policy Definition**. A policy definition expresses what to evaluate and what action to take. For example, you could have a policy definition that restricts the regions available to resources.
-- Some **Policy Definitions** are built-in, and you can also create custom policies. The built-in policies are provided by Azure, and you can't modify them. Custom policies are created by you, and you can define the conditions under which they are enforced.
+There are few key concepts to understand before you start with the lab:
+
+- The first object to create when working with Azure Policies, is a **Policy Definition**. It expresses what to evaluate and what action to take. For example, you could have a policy definition that restricts the regions available for resources.
+
+- Some **Policy Definitions** are built-in and you can also create custom policies. The built-in policies are provided by Azure, and you can't modify them. Custom policies are created by you, and you can define the conditions under which they are enforced.
+
 - Once you have a policy definition, you can assign it to a specific scope. The scope of a **Policy Assignment** can be a management group, a subscription, a resource group, or a resource. When you assign a policy, it starts to evaluate resources in the scope. Of course, you can exclude specific child scopes from the evaluation.
+
 - When a policy is assigned, it's enforced. If a resource is not compliant with the policy, the policy's defined effect is applied. The effect could be to deny the request, audit the request, append a field to the request, or deploy a resource.
+
 - In some cases, you might want to exempt a resource from a policy assignment. You can do this by creating a **Policy Exemption**. An exemption is a way to exclude a specific resource from a policy's evaluation. 
-
-<div class="tip" data-title="Pre-requisites">
-
-> - An active Azure subscription.
-> - Basic understanding of Azure resources.
 
 <details>
 <summary>📚 Toggle to discover your lab resources</summary>
 
-In the Azure Portal, there are dedicated resource groups for each participant.
+In the Azure Portal, there are dedicated resource groups for each participant based on the participant number.
 
 ![Azure Policy Hands on Lab Resource Groups](assets/lab3-azurepolicy/azpolicy-resourcegroups.png)
 
-You will find a virtual network with an Azure Resource Manager template spec that deploys a network security group with few inbound rules. 
+In your resource group, you will find a virtual network with an Azure Resource Manager template spec that deploys a network security group with few inbound rules.
 
 ![Hands on Lab Resources](assets/lab3-azurepolicy/azpolicy-resources.png)
 
@@ -746,23 +747,29 @@ You will find a virtual network with an Azure Resource Manager template spec tha
 
 </div>
 
-Azure Policy has many effects, but in this lab we are going to focus on the 3 main effects that can be applied to resources: Deny, Modify, and DeployIfNotExists. Each effect has a different impact on the resources that are evaluated against the policy.
+Azure Policy has many effects, but in this lab you will focus on the 3 main effects that can be applied to resources: 
+- Deny
+- Modify
+- DeployIfNotExists
+
+Each effect has a different impact on the resources that are evaluated against the policy.
 
 <div class="task" data-title="Tasks">
 
 > - For each effect, you'll be deploying a Policy Definition and assign on your dedicated resource groups (or sub resources).
 > - You will then follow the instructions and manipulate your dedicated resources to trigger the policy effect (whether it is a deny, modify, or a deployIfNotExists).
 > - You will then check the compliance status of your resources.
-> - You will change the default parameters to see how the policies change their behavior.
+> - Finally, you will change the default parameters to see how the policies change their behavior.
 
 </div>
 
-## 1- Getting started with the Deny effect
+## Getting started with the Deny effect
 
-Let's start by crafting a policy that denies the creation of network security group rules that allow inbound traffic from public IP addresses into the virtual network. The policy will take as a parameter a list of allowed IP ranges in case we need to allow some specific IP addresses (like CDN IPs or Proxy IPs).
+Let's start by crafting a policy that denies the creation of network security group rules that allow inbound traffic from public IP addresses into the virtual network. The policy will take as a parameter a list of allowed IP ranges in case you need to allow some specific IP addresses (like CDN IPs or Proxy IPs).
 
+### Discover the policy definition
 <details>
-<summary>📚 STEP 1 - Discover the policy definition of deploy</summary>
+<summary>📚 Open the Policy definition to deploy</summary>
 
 ```json
 {
@@ -919,79 +926,99 @@ Let's start by crafting a policy that denies the creation of network security gr
 
 ```
 
+</details>
+
 **Understanding the policy:**
 
-> - The provided policy definition's purpose is to deny any inbound Network Security Group (NSG) rules that allow traffic from public addresses not in a predefined list of allowed IPs.
-> - The policy is of type "Custom" and operates in "All" mode. It has a parameter "listOfAllowedIps" which is an array. The default values for this array are "10.0.0.0/8", "172.16.0.0/12", and "192.168.0.0/24". These are IP ranges in private network address spaces.
-> - The policy rule is defined under "policyRule". It uses a conditional "if" statement that checks for multiple conditions using "anyOf" and "allOf" operators. The conditions check the type of the resource, the access type, the direction of the rule, and the source address prefix. If any of these conditions are met, the policy effect is set to "deny", which means the policy will block the creation or modification of the NSG rule.
-> - The first set of conditions specifically look for an NSG ("Microsoft.Network/networkSecurityGroups") that contains at least 1 non-compliant rule. The second set of conditions look for a unitary NSG rule ("Microsoft.Network/networkSecurityGroups/securityRules") that have "Allow" access and "Inbound" direction. It also checks if the source address prefix is "*" (which means all addresses), "Internet", or not in the list of allowed IPs. 
-> - The policy uses the "ipRangeContains" function to check if the source address prefix is within the allowed IP ranges. If the source address prefix is not in the allowed IP ranges, the policy will deny the NSG rule. 
-> - This policy is useful for ensuring that only specific IP ranges can access resources in your Azure environment, enhancing the security of your network.
+- The provided policy definition's purpose is to deny any inbound Network Security Group (NSG) rules that allow traffic from public addresses not in a predefined list of allowed IPs.
+
+- The policy is of type `Custom` and operates in `All` mode. It has a parameter `listOfAllowedIps` which is an array. The default values for this array are `10.0.0.0/8`, `172.16.0.0/12`, and `192.168.0.0/24`. These are IP ranges in private network address spaces.
+
+- The policy rule is defined under `policyRule`. It uses a conditional `if` statement that checks for multiple conditions using `anyOf` and `allOf` operators. The conditions check the type of the resource, the access type, the direction of the rule, and the source address prefix. If any of these conditions are met, the policy effect is set to `deny`, which means the policy will block the creation or modification of the NSG rule.
+
+- The first set of conditions specifically look for an NSG (`Microsoft.Network/networkSecurityGroups`) that contains at least 1 non-compliant rule. The second set of conditions look for a unitary NSG rule (`Microsoft.Network/networkSecurityGroups/securityRules`) that have `Allow` access and `Inbound` direction. It also checks if the source address prefix is `*` (which means all addresses), `Internet`, or not in the list of allowed IPs. 
+
+- The policy uses the `ipRangeContains` function to check if the source address prefix is within the allowed IP ranges. If the source address prefix is not in the allowed IP ranges, the policy will deny the NSG rule. 
+
+- This policy is useful for ensuring that only specific IP ranges can access resources in your Azure environment, enhancing the security of your network.
+
+### Deploy the policy definition
+
+In the Azure Portal, search for **Policy** in thpage.
+![Policy Page](assets/lab3-azurepolicy/azpolicy-search.png)
+
+Then click on **Definitions** and then **+ Policy definition**.
+![New Policy Definition](assets/lab3-azurepolicy/azpolicy-new-policy-definition-1.png)
+
+In the **Definition location** select the **Subscription** where you want to deploy the policy definition. Give the policy definition a name like 'CD-Deny-MS-NSG-<your-initials>'. Copy the policy definition presented previously and paste it in the **POLICY RULE** pane and click on **Save**.
+
+![Policy Definition Pane](assets/lab3-azurepolicy/azpolicy-new-policy-definition-2.png)
 
 </details>
 
-<details>
-<summary> 📚 STEP 2 - Deploy the policy definition </summary>
+### Assign the policy
 
-1. In the Azure Portal, navigate to the **Policy** page.
-![Policy Page](assets/lab3-azurepolicy/azpolicy-resources.png)
+Your Azure Policy is now created globally in your subscription. You need to assign it to a specific scope to start enforcing it.
 
-2. Then click on **Definitions** and then **+ Policy definition**.
-![New Policy Definition](assets/lab3-azurepolicy/azpolicy-new-policydefinition-1.png)
+In your policy, click on **Assign policy**:
+![Policy Page](assets/lab3-azurepolicy/azpolicy-deny-policy-assignment-1.png)
 
-3. Copy the policy definition JSON and paste it in the **Policy definition** pane and click on save. Make sure to rename the policy definition to 'CD-Deny-MS-USER-###' where ### is your initials.
-![Policy Definition Pane](assets/lab3-azurepolicy/azpolicy-new-policydefinition-2.png)
+You will be redirected to a new page, where you can assign the policy to a specific scope. In this case, select the resource group that contains the network security group of the resource group assigned to you for this lab.
 
-</details>
+![Policy Assignment Scope](assets/lab3-azurepolicy/azpolicy-deny-policy-assignment-2.png)
 
-<details>
-<summary> 📚 STEP 3 - Assign the policy </summary>
+Click on **Next** button and leave the default values of the **Advanced** tab as is.
 
-1. In the Azure Policy page, click on **Assign policy**
-![Policy Page](assets/lab3-azurepolicy/azpolicy-deny-policyassignment-1.png)
+Then in the **Parameters** tab uncheck **Only show parameters that need input or review** to see the default values of the policy parameter. We are going to leave the default values here for now.
+![Policy Assignment Parameters](assets/lab3-azurepolicy/azpolicy-deny-policy-assignment-3.png)
 
-2. Select the scope of the assignment. In this case, select the resource group that contains the network security group.
-![Policy Assignment Scope](assets/lab3-azurepolicy/azpolicy-deny-policyassignment-2.png)
-![Policy Assignment Scope](assets/lab3-azurepolicy/azpolicy-deny-policyassignment-3.png)
+Finally, skip the next steps and click on **Review + create** and then **Create** to assign the policy.
 
-3. Click on **Next** button and leave the default values.
-![Policy Assignment Parameters](assets/lab3-azurepolicy/azpolicy-deny-policyassignment-4.png)
+![Policy Assignment Parameters](assets/lab3-azurepolicy/azpolicy-deny-policy-assignment-4.png)
 
-4. Click on **Next** button once again and uncheck **Only show parameters that need input or review** to see the default values of the policy parameter. We are going to leave the default values here for now.
-![Policy Assignment Parameters](assets/lab3-azurepolicy/azpolicy-deny-policyassignment-5.png)
-
-5. Skip the next steps and click on **Review + create** and then **Create** to assign the policy.
-![Policy Assignment Parameters](assets/lab3-azurepolicy/azpolicy-deny-policyassignment-6.png)
-
-</details>
-
-<details>
-<summary> 📚 STEP 4 - Test the policy </summary>
+### Test the policy
 
 <div class="task" data-title="Tasks">
 
-> 1. In your resource group, navigate to the template spec and click on the **Deploy** button to deploy a network security group with few default inbound rules that are compliant. Leave the default parameters and click on **Review + Create**.
-![Deploy NSG](assets/lab3-azurepolicy/azpolicy-deny-tests-1.png)
-![Deploy NSG](assets/lab3-azurepolicy/azpolicy-deny-tests-2.png)
-> 2. After the deployment is done, navigate to the network security group and try to add a new inbound rule that allows traffic from a public IP address that is not in the list of allowed IPs. You should see an error message that the operation is denied by the policy.
-![Deploy Non-compliant NSG rule](assets/lab3-azurepolicy/azpolicy-deny-tests-3.png)
-![Deploy Non-compliant NSG rule](assets/lab3-azurepolicy/azpolicy-deny-tests-4.png)
-![Deploy Non-compliant NSG rule](assets/lab3-azurepolicy/azpolicy-deny-tests-5.png)
+> - Try to test your policy on the network security group of your resource group. Try to add a new inbound rule that allows traffic from a public IP address that is not in the list of allowed IPs. You should see an error message that the operation is denied by the policy.
+>
+> - Use the template spec in your resource group to deploy a network security group.
 
 </div>
+
+<details>
+<summary>📚 Toggle solution</summary>
+
+In your resource group, navigate to the template spec and click on the **Deploy** button to deploy a network security group with few default inbound rules that are compliant. 
+
+![Deploy NSG](assets/lab3-azurepolicy/azpolicy-deny-tests-1.png)
+
+Leave the default parameters and click on **Review + Create**:
+
+![Deploy NSG](assets/lab3-azurepolicy/azpolicy-deny-tests-2.png)
+
+After the deployment is done, navigate to the network security group and try to add a new **inbound security rule** that allows traffic from a public IP address that is not in the list of allowed IPs.
+
+![Deploy Non-compliant NSG rule](assets/lab3-azurepolicy/azpolicy-deny-tests-4.png)
+
+You should see an error message that the operation is denied by the policy:
+
+![Deploy Non-compliant NSG rule](assets/lab3-azurepolicy/azpolicy-deny-tests-5.png)
+
+</details>
 
 <div class="tip" data-title="Tips">
 
 > - If the policy error message seems unclear, you can set a human-readable non-compliance message in the policy assignment. This message will be displayed to the user when the policy denies the operation. To do so, you can go to **Policy** > **Assignments** > Select the assignment > **Edit assignment** > **Non-compliance message**.
-![Custom Non Compliant Message Setting](assets/lab3-azurepolicy/azpolicy-deny-tests-6.png)
+>
+> ![Custom Non Compliant Message Setting](assets/lab3-azurepolicy/azpolicy-deny-tests-6.png)
+>
 > - Try again to add a rule that is non-compliant, and see if the error message is more explicit. You should be having something like this:
 ![Custom Non Compliant Message Display](assets/lab3-azurepolicy/azpolicy-deny-tests-7.png)
 > - Keep playing around with the policy and try to understand the conditions that trigger the deny effect.
 </div>
 
-</details>
-
-## 2- Enforce rules on-the-fly with the Modify Effect
+## Enforce rules on-the-fly with the Modify Effect
 
 The modify effect is a powerful effect that allows you to modify the properties of a resource to bring it into compliance with the policy.
 
@@ -999,8 +1026,10 @@ The policies of **modify** effect intercept any operation on the resource and ap
 
 Let's create a policy that modifies the tags of a resource group. The policy will add a tag to the resource group if it doesn't already exist.
 
+### Discover the policy definition of modify 
+
 <details>
-<summary>📚 STEP 1 - Discover the policy definition of modify</summary>
+<summary>📚 Open the Policy definition to deploy</summary>
 
 ```json
 {
@@ -1057,21 +1086,20 @@ Let's create a policy that modifies the tags of a resource group. The policy wil
   }
 }
 ```
-
-> - The provided policy definition's purpose is to add an immutable tag to a resource group if it doesn't already exist. The policy is of type "Custom" and operates in "All" mode. It has two parameters: "ImmutableTagName" and "ImmutableTagValue". The default values for these parameters are "Environment" and "NonProduction" respectively.
-> - Whenever a resource group is **created** or **modified**, the policy checks if the tag with the name specified in "ImmutableTagName" has the value specified in "ImmutableTagValue". If the tag doesn't exist or has a different value, the policy will modify the resource group by adding or replacing the tag with the specified value.
-
 </details>
 
-<details>
-<summary> 📚 STEP 2 and 3 - Deploy and Assign the policy definition on your resource group </summary>
+- The provided policy definition's purpose is to add an immutable tag to a resource group if it doesn't already exist. The policy is of type `Custom` and operates in `All` mode. It has two parameters: `ImmutableTagName` and `ImmutableTagValue`. The default values for these parameters are `Environment` and `NonProduction` respectively.
+
+- Whenever a resource group is **created** or **modified**, the policy checks if the tag with the name specified in `ImmutableTagName` has the value specified in `ImmutableTagValue`. If the tag doesn't exist or has a different value, the policy will modify the resource group by adding or replacing the tag with the specified value.
+
+### Deploy and Assign the policy definition
 
 <div class="task" data-title="Tasks">
 
-> - Try to reproduce the steps 2 and 3 from the previous challenge but with the new **modify** policy definition.
+> Like you did for the previous policy, deploy and assign the **modify** policy definition to your dedicated resource group. Call it 'CD-Modify-MS-RG-<your-initials>'.
 > - Try to change the default values of the parameters to see how the policy behaves.
 > - Respect the naming convention for the policy definition and the policy assignment, by including your initials to the names.
-> - When assigning the policy, beware to select your dedicated resource group as a scope and don't overstep on other resource groups.
+> - When assigning the policy, beware to **select your dedicated resource group**
 
 </div>
 
@@ -1089,17 +1117,15 @@ Let's create a policy that modifies the tags of a resource group. The policy wil
 
 </details>
 
-<details>
-<summary> 📚 STEP 4 - Test the policy </summary>
+### Test the policy
 
-<div class="task" data-title="Tasks">
+In you resource group, navigate to the tags blade of the resource group and check if the tag has been added.
 
-> - In you resource group, navigate to the tags blade of the resource group and check if the tag has been added.
-> - It generally takes few minutes for the policy to be applied. If the tag is not added, wait a few more minutes and check again.
-> - When the tag appears on the resource group, try to modify its value and see if the policy restores the default value.
-> - Try to delete the tag and see if the policy adds it back.
+It generally takes **few minutes** for the policy to be applied. If the tag is not added, wait a few more minutes and check again. You can continue to the next section and go back here later.
 
-</div>
+When the tag appears on the resource group, try to modify its value and see if the policy restores the default value.
+
+Try to delete the tag and see if the policy adds it back.
 
 <div class="tip" data-title="Tips">
 
@@ -1108,12 +1134,12 @@ Let's create a policy that modifies the tags of a resource group. The policy wil
 
 </div>
 
-</details>
+## Extend resources with the DeployIfNotExists Effect
 
-## 3- Extend resources with the DeployIfNotExists Effect
+### Discover the policy definition of deployIfNotExists
 
 <details>
-<summary> 📚 STEP 1 - Discover the policy definition of deployIfNotExists</summary>
+<summary> 📚 Open the Policy definition to deploy </summary>
 
 ```json
 {
@@ -1212,15 +1238,15 @@ Let's create a policy that modifies the tags of a resource group. The policy wil
   ]
 }
 ```
-
-> - The provided policy definition's purpose is to create a virtual network link to a private DNS zone if it doesn't already exist. The policy is of type "Custom" and operates in "All" mode. It has two parameters: "privateDnsZoneName" and "hubVnetResourceId". The default value for "privateDnsZoneName" is "*.northeurope.azurecontainerapps.io".
-> - The virtual network link of a private DNS zone is created only if the private DNS zone name matches the pattern specified in "privateDnsZoneName". The policy checks if the virtual network link already exists by comparing the virtual network ID with the value specified in "hubVnetResourceId". If the virtual network link doesn't exist, the policy will deploy the virtual network link to the private DNS zone.
-> - This policy is super userful for ensuring automated links between certain Private DNS Zones to specific virtual network to enable DNS resolution with other virtual networks.
-
 </details>
 
-<details>
-<summary> 📚 STEP 2 and 3 - Deploy and Assign the policy definition on your resource group </summary>
+- The provided policy definition's purpose is to create a virtual network link to a private DNS zone if it doesn't already exist. The policy is of type `Custom` and operates in `All` mode. It has two parameters: `privateDnsZoneName` and `hubVnetResourceId`. The default value for `privateDnsZoneName` is `*.northeurope.azurecontainerapps.io`.
+
+- The virtual network link of a private DNS zone is created only if the private DNS zone name matches the pattern specified in `privateDnsZoneName`. The policy checks if the virtual network link already exists by comparing the virtual network ID with the value specified in `hubVnetResourceId`. If the virtual network link doesn't exist, the policy will deploy the virtual network link to the private DNS zone.
+
+- This policy is super userful for ensuring automated links between certain Private DNS Zones to specific virtual network to enable DNS resolution with other virtual networks.
+
+### Deploy and Assign the policy definition on your resource group
 
 <div class="task" data-title="Tasks">
 
@@ -1232,10 +1258,8 @@ Let's create a policy that modifies the tags of a resource group. The policy wil
 ![Assign the DeployIfNotExists policy](assets/lab3-azurepolicy/azpolicy-deployifnotexist-assignment.png)
 
 </div>
-</details>
 
-<details>
-<summary> 📚 STEP 4 - Test the policy </summary>
+### Test the policy
 
 <div class="task" data-title="Tasks">
 
@@ -1247,12 +1271,9 @@ Let's create a policy that modifies the tags of a resource group. The policy wil
 ![Verify the virtual network link](assets/lab3-azurepolicy/azpolicy-deployifnotexist-test-3.png)
 </div>
 
-</details>
+## Understand Exemptions
 
-## 4- Understand Exemptions
-
-<details> 
-<summary> 📚 STEP 1 - Create a second NSG and exempting it  </summary>
+### Create a second NSG and exempting it
 
 <div class="task" data-title="Tasks">
 
@@ -1260,17 +1281,14 @@ Let's create a policy that modifies the tags of a resource group. The policy wil
 ![Create a new NSG](assets/lab3-azurepolicy/azpolicy-exemptions-step1.png)
 > - The new network security group should appear alongside the existing one.
 ![Create a new NSG](assets/lab3-azurepolicy/azpolicy-exemptions-step2.png)
-> - Go to **Policy** > **Assignments** > Select your **```CA-Deny-MS-User-###```** assignment, and click on **Create Exemption**.
+> - Go to **Policy** > **Assignments** > Select your **```CA-Deny-MS-User-<your-initials>```** assignment, and click on **Create Exemption**.
 ![Create an Exemption](assets/lab3-azurepolicy/azpolicy-exemptions-step3.png)
 > - Select **nsg-test-2** as the scope of the exemption and then click on **Review + Create**.
 ![Create an Exemption - Scope](assets/lab3-azurepolicy/azpolicy-exemptions-step4.png)
 
 </div>
 
-</details>
-
-<details>
-<summary> 📚 STEP 2 - Test the exemption </summary>
+### Test the exemption
 
 <div class="task" data-title="Tasks">
 
@@ -1283,10 +1301,7 @@ Let's create a policy that modifies the tags of a resource group. The policy wil
 ![Create a non-compliant rule on unexempted nsg- denied](assets/lab3-azurepolicy/azpolicy-exemptions-test-step4.png)
 </div>
 
-</details>
-
-<details> 
-<summary> 📚 STEP 3 - Tighten-up </summary>
+### Tighten-up
 
 <div class="task" data-title="Tasks">
 
@@ -1296,9 +1311,8 @@ Let's create a policy that modifies the tags of a resource group. The policy wil
 > - **OUTCOME: The new NSG should only allow inboud rules with 8.8.8.8 as a source but denies everything else (just like the other NSG)**
 
 </div>
-</details>
 
-## 5- Reading the Compliance Report
+## Reading the Compliance Report
 
 At the end of this workshop take a time to read the compliance report of your resources. You can find the compliance report in the **Policy** blade of the Azure Portal.
 

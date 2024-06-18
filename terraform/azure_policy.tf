@@ -5,6 +5,13 @@ resource "azurerm_resource_group" "rg-azurepolicy-lab" {
   location = var.location
 }
 
+resource "azurerm_role_assignment" "rg_azurepolicy_lab_contributor" {
+  for_each             = local.users_index
+  scope                = azurerm_resource_group.rg-azurepolicy-lab[each.key].id
+  role_definition_name = "Contributor"
+  principal_id         = azuread_user.this[each.key].id
+}
+
 resource "azapi_resource" "template-spec-azurepolicy-lab" {
   for_each = azurerm_resource_group.rg-azurepolicy-lab
 
