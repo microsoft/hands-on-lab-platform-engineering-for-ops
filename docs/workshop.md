@@ -732,20 +732,12 @@ There are few key concepts to understand before you start with the lab:
 
 - In some cases, you might want to exempt a resource from a policy assignment. You can do this by creating a **Policy Exemption**. An exemption is a way to exclude a specific resource from a policy's evaluation. 
 
-<details>
-<summary>📚 Toggle to discover your lab resources</summary>
-
 In the Azure Portal, there are dedicated resource groups for each participant based on the participant number.
 
-![Azure Policy Hands on Lab Resource Groups](assets/lab3-azurepolicy/azpolicy-resourcegroups.png)
+In your resource group, you will find:
 
-In your resource group, you will find a virtual network with an Azure Resource Manager template spec that deploys a network security group with few inbound rules.
-
-![Hands on Lab Resources](assets/lab3-azurepolicy/azpolicy-resources.png)
-
-</details>
-
-</div>
+- A virtual network
+- An Azure Resource Manager template spec that deploys a network security group with few inbound rules.
 
 Azure Policy has many effects, but in this lab you will focus on the 3 main effects that can be applied to resources: 
 - Deny
@@ -950,7 +942,7 @@ In the Azure Portal, search for **Policy** in thpage.
 Then click on **Definitions** and then **+ Policy definition**.
 ![New Policy Definition](assets/lab3-azurepolicy/azpolicy-new-policy-definition-1.png)
 
-In the **Definition location** select the **Subscription** where you want to deploy the policy definition. Give the policy definition a name like 'CD-Deny-MS-NSG-<your-initials>'. Copy the policy definition presented previously and paste it in the **POLICY RULE** pane and click on **Save**.
+In the **Definition location** select the **Subscription** where you want to deploy the policy definition. Give the policy definition a name like `CD-Deny-MS-NSG-<your-initials>`. Copy the policy definition presented previously and paste it in the **POLICY RULE** pane and click on **Save**.
 
 ![Policy Definition Pane](assets/lab3-azurepolicy/azpolicy-new-policy-definition-2.png)
 
@@ -1018,7 +1010,7 @@ You should see an error message that the operation is denied by the policy:
 > - Keep playing around with the policy and try to understand the conditions that trigger the deny effect.
 </div>
 
-## Enforce rules on-the-fly with the Modify Effect
+## Enforce rules on-the-fly with the Modify effect
 
 The modify effect is a powerful effect that allows you to modify the properties of a resource to bring it into compliance with the policy.
 
@@ -1026,7 +1018,7 @@ The policies of **modify** effect intercept any operation on the resource and ap
 
 Let's create a policy that modifies the tags of a resource group. The policy will add a tag to the resource group if it doesn't already exist.
 
-### Discover the policy definition of modify 
+### Discover the policy definition 
 
 <details>
 <summary>📚 Open the Policy definition to deploy</summary>
@@ -1092,28 +1084,34 @@ Let's create a policy that modifies the tags of a resource group. The policy wil
 
 - Whenever a resource group is **created** or **modified**, the policy checks if the tag with the name specified in `ImmutableTagName` has the value specified in `ImmutableTagValue`. If the tag doesn't exist or has a different value, the policy will modify the resource group by adding or replacing the tag with the specified value.
 
-### Deploy and Assign the policy definition
+### Assign & Deploy the policy definition
 
 <div class="task" data-title="Tasks">
 
-> Like you did for the previous policy, deploy and assign the **modify** policy definition to your dedicated resource group. Call it 'CD-Modify-MS-RG-<your-initials>'.
+> Like you did for the previous policy, deploy and assign the **modify** policy definition to your dedicated resource group. Call it `CD-Modify-MS-RG-<your-initials>`.
 > - Try to change the default values of the parameters to see how the policy behaves.
 > - Respect the naming convention for the policy definition and the policy assignment, by including your initials to the names.
 > - When assigning the policy, beware to **select your dedicated resource group**
 
 </div>
 
-<div class="tip" data-title="Tips">
+<details>
+<summary>📚 Toggle solution</summary
 
-> - Try to apply a remediation task on your resource group as part of the assignment to enforce the tag.
-![Create a Remediation Task](assets/lab3-azurepolicy/azpolicy-modify-remediation-1.png)
-![Create a Remediation Task - Evaluating](assets/lab3-azurepolicy/azpolicy-modify-remediation-2.png)
-![Create a Remediation Task - Complete](assets/lab3-azurepolicy/azpolicy-modify-remediation-3.png)
-> - Once the remediation complete you can verify that the tag has been added to the resource group.
-![Verify presence of tags](assets/lab3-azurepolicy/azpolicy-modify-remediation-4.png)
-> - You can verify in the activity log that the managed identity of the policy has assignment was used to modify the resource group (to write the tags).
-![Verify Activity Log](assets/lab3-azurepolicy/azpolicy-modify-remediation-5.png)
-</div>
+After deploying the policy and assigned it correctly, try to apply a remediation task on your resource group as part of the assignment to enforce the tag like this:
+![Create a Remediation Task](assets/lab3-azurepolicy/azpolicy-modify-apply-remediation.png)
+
+As you can see a **System Managed Identity** is used to apply the remediation task. This identity is used to modify the resource group (to write the tags).
+
+The remediation can take few minutes, to see it, go to **Policy** on Azure, then select **Remediation** tab and select as scope the resource group you assigned the policy to. After a few minutes you should see the remediation task evaluated and then completed.
+
+![Create a Remediation Task - Evaluating](assets/lab3-azurepolicy/azpolicy-modify-check-remediation.png)
+
+Once the remediation complete you can verify that the tag has been added to the resource group by just navigating to the overview blade of the resource group.
+![Verify presence of tags](assets/lab3-azurepolicy/azpolicy-modify-check-tags-after-remediation.png)
+
+Finally, you can verify in the activity log that the managed identity of the policy assignment was used to modify the resource group:
+![Verify Activity Log](assets/lab3-azurepolicy/azpolicy-modify-policy-applied-activity-logs.png)
 
 </details>
 
@@ -1134,7 +1132,7 @@ Try to delete the tag and see if the policy adds it back.
 
 </div>
 
-## Extend resources with the DeployIfNotExists Effect
+## Extend resources with the DeployIfNotExists effect
 
 ### Discover the policy definition of deployIfNotExists
 
@@ -1240,75 +1238,77 @@ Try to delete the tag and see if the policy adds it back.
 ```
 </details>
 
-- The provided policy definition's purpose is to create a virtual network link to a private DNS zone if it doesn't already exist. The policy is of type `Custom` and operates in `All` mode. It has two parameters: `privateDnsZoneName` and `hubVnetResourceId`. The default value for `privateDnsZoneName` is `*.northeurope.azurecontainerapps.io`.
+- The provided policy definition's purpose is to create a virtual network link to a private DNS zone if it doesn't already exist. The policy is of type `Custom` and operates in `All` mode. It has two parameters: `privateDnsZoneName` and `hubVnetResourceId`. The default value for `privateDnsZoneName` is `*.westeurope.azurecontainerapps.io`.
 
 - The virtual network link of a private DNS zone is created only if the private DNS zone name matches the pattern specified in `privateDnsZoneName`. The policy checks if the virtual network link already exists by comparing the virtual network ID with the value specified in `hubVnetResourceId`. If the virtual network link doesn't exist, the policy will deploy the virtual network link to the private DNS zone.
 
 - This policy is super userful for ensuring automated links between certain Private DNS Zones to specific virtual network to enable DNS resolution with other virtual networks.
 
-### Deploy and Assign the policy definition on your resource group
+### Assign & Deploy the policy definition
 
 <div class="task" data-title="Tasks">
 
-> - Try to reproduce the steps 2 and 3 from the previous challenge but with the new **deployIfNotExists** policy definition.
+> - Like you did for the previous policy, deploy and assign the **DeployIfNotExists** policy definition to your dedicated resource group. Call it `CD-DeployIfNotExists-MS-RG-<your-initials>`.
 > - Try to change the default values of the parameters to see how the policy behaves. You may want to have your own private DNS zone pattern pattern.
-> - Respect the naming convention for the policy definition and the policy assignment, by including your initials to the names.
-> - When assigning the policy, beware to select your dedicated resource group as a scope and don't overstep on other resource groups.
+> - When assigning the policy, beware to select your dedicated resource group
 > - When assigning the policy, beware to select your dedicated virtual network as a **hubVnetResourceId** parameter.
-![Assign the DeployIfNotExists policy](assets/lab3-azurepolicy/azpolicy-deployifnotexist-assignment.png)
+>
+> ![Assign the DeployIfNotExists policy](assets/lab3-azurepolicy/azpolicy-deployifnotexist-assignment-parameters.png)
 
 </div>
 
 ### Test the policy
 
-<div class="task" data-title="Tasks">
+In your resource group, create a new private DNS zone that matches the pattern specified in the policy definition. With this format: `user<your-initials>.westeurope.azurecontainerapps.io`.
+![Create a Private DNS Zone](assets/lab3-azurepolicy/azpolicy-create-dns.png)
 
-> - In your resource group, create a new private DNS zone that matches the pattern specified in the policy definition.
-![Create a Private DNS Zone](assets/lab3-azurepolicy/azpolicy-deployifnotexist-test-1.png)
-> - Check if the virtual network link is created automatically.
-![Verify the virtual network link](assets/lab3-azurepolicy/azpolicy-deployifnotexist-test-2.png)
-> - Verify the activity logs to see the deployment of the virtual network link.
-![Verify the virtual network link](assets/lab3-azurepolicy/azpolicy-deployifnotexist-test-3.png)
-</div>
+Check if the virtual network link is created automatically. This can take a few minutes to be applied.
+![Verify the virtual network link](assets/lab3-azurepolicy/azpolicy-deployifnotexist-auto-vnet-links.png)
+
+Verify the activity logs to see the deployment of the virtual network link:
+![Verify the virtual network link](assets/lab3-azurepolicy/azpolicy-deployifnotexist-activity-logs.png)
+
+As you can see in the **Event initiated by**, the identity used to deploy the virtual network link is the System Managed Identity of the policy assignment that you created before.
 
 ## Understand Exemptions
 
-### Create a second NSG and exempting it
+### Exempt a resource
 
-<div class="task" data-title="Tasks">
+Let's discover how to exempt a resource from a policy assignment. In this challenge, you will exempt a network security group from the policy assignment that denies inbound rules from public IP addresses.
 
-> - Create a new network security group in your exisiting resource group.
-![Create a new NSG](assets/lab3-azurepolicy/azpolicy-exemptions-step1.png)
-> - The new network security group should appear alongside the existing one.
-![Create a new NSG](assets/lab3-azurepolicy/azpolicy-exemptions-step2.png)
-> - Go to **Policy** > **Assignments** > Select your **```CA-Deny-MS-User-<your-initials>```** assignment, and click on **Create Exemption**.
-![Create an Exemption](assets/lab3-azurepolicy/azpolicy-exemptions-step3.png)
-> - Select **nsg-test-2** as the scope of the exemption and then click on **Review + Create**.
-![Create an Exemption - Scope](assets/lab3-azurepolicy/azpolicy-exemptions-step4.png)
+Using the deployment template spec in your resource group, create a new network security group in your resource group:
 
-</div>
+![Create a new NSG](assets/lab3-azurepolicy/azpolicy-exemptions-create-new-nsg.png)
+
+The new network security group should appear alongside the previous one.
+
+Now you will exempt the new network security group from the policy assignment that denies inbound rules from public IP addresses. Go to **Policy** > **Assignments** > Select your **`CA-Deny-MS-User-<your-initials>`** assignment, and click on **Create Exemption**.
+
+![Create an Exemption](assets/lab3-azurepolicy/azpolicy-create-exemptions.png)
+
+Select **nsg-test-exemption** as the scope of the exemption and then click on **Review + Create**.
+
+![Create an Exemption - Scope](assets/lab3-azurepolicy/azpolicy-create-exemptions-on-nsg.png)
 
 ### Test the exemption
 
-<div class="task" data-title="Tasks">
+Go to the network security group that you exempted from the policy assignment and try to add a non-compliant **inbound security rule**:
 
-> - Go to the new network security group and try to add a non-compliant inbound rule.
-![Create a non-compliant rule](assets/lab3-azurepolicy/azpolicy-exemptions-test-step1.png)
-> - You should see that the operation is not denied by the policy.
-![Create a non-compliant rule](assets/lab3-azurepolicy/azpolicy-exemptions-test-step2.png)
-> - Meanwhile, the other network security group should still be denied.
-![Create a non-compliant rule on unexempted nsg](assets/lab3-azurepolicy/azpolicy-exemptions-test-step3.png)
-![Create a non-compliant rule on unexempted nsg- denied](assets/lab3-azurepolicy/azpolicy-exemptions-test-step4.png)
-</div>
+![Create a non-compliant rule](assets/lab3-azurepolicy/azpolicy-exemptions-test-non-compliante.png)
 
-### Tighten-up
+You should see that the operation is not denied by the policy, and the rule is created successfully:
+![Create a non-compliant rule](assets/lab3-azurepolicy/azpolicy-exemptions-test-non-compliante-created.png)
 
-<div class="task" data-title="Tasks">
+Meanwhile, go back to the first network security group you created, if you try to add a non-compliant rule, you still get an error message.
 
-> - It is important to note that when creating an exemption for a resource, it is generally discouraged to exempt everything. By exempting the policy assignment in the previous challenge, you have allowed all source address prefixes, which is not ideal in real-life scenarios.
-> - In practice, cybersecurity teams typically exempt specific patterns rather than granting full access. Therefore, we need to protect the new nsg against unallowed patterns by enforcing a new policy assignment on the exempted NSG and that includes the new rule pattern in the default parameter.
-> - Let's assume that the cyber team has only allowed 8.8.8.8 as a valid source address. You can add this address to the default parameter of the policy assignment and then test the exemption again.
-> - **OUTCOME: The new NSG should only allow inboud rules with 8.8.8.8 as a source but denies everything else (just like the other NSG)**
+<div class="warning" data-title="Warning">
+
+> It is important to note that when creating an exemption for a resource, it is generally discouraged to exempt everything. By exempting the policy assignment in the previous challenge, you have allowed all source address prefixes, which is not ideal in real-life scenarios.
+>
+> In practice, cybersecurity teams typically exempt specific patterns rather than granting full access. Therefore, you need to protect the new NSG against unallowed patterns by enforcing a new policy assignment on the exempted NSG and that includes the new rule pattern in the default parameter.
+>
+> Let's assume that the cyber team has only allowed 8.8.8.8 as a valid source address. You can add this address to the default parameter of the policy assignment and then test the exemption again.
+> - **OUTCOME: The new NSG should only allow inbound rules with 8.8.8.8 as a source but denies everything else (just like the other NSG)**
 
 </div>
 
@@ -1316,7 +1316,7 @@ Try to delete the tag and see if the policy adds it back.
 
 At the end of this workshop take a time to read the compliance report of your resources. You can find the compliance report in the **Policy** blade of the Azure Portal.
 
-![Policy Compliance Dashboard](assets/lab3-azurepolicy/azpolicy-compliance.png)
+![Policy Compliance Dashboard](assets/lab3-azurepolicy/azpolicy-compliance-report.png)
 
 Azure Policy compliance data could be used to trigger automations that can remediate non-compliant resources. You can also use the compliance data to generate reports and monitor the security and compliance posture of your resources.
 
