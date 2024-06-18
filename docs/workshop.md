@@ -2,7 +2,7 @@
 published: true
 type: workshop
 title: Product Hands-on Lab - Platform engineering for Ops
-short_title: Platform engineering for Ops
+short_title: Platform Engineering for Ops
 description: This workshop will cover the topic of platform engineering from an Ops perspective.
 level: beginner # Required. Can be 'beginner', 'intermediate' or 'advanced'
 navigation_numbering: false
@@ -69,11 +69,11 @@ Every Github account (even the free ones) grants access to 120 vcpu hours per mo
 To get your codespace ready for the labs, here are a few steps to execute : 
 - After you forked the repo, click on `<> Code`, `Codespaces` tab and then click on the `+` button:
 
-![codespace-new](./assets/codespace-new.png)
+![codespace-new](./assets/lab0-prerequisites/codespace-new.png)
 
 - You can also provision a beefier configuration by defining creation options and select the **Machine Type** you like: 
 
-![codespace-configure](./assets/codespace-configure.png)
+![codespace-configure](./assets/lab0-prerequisites/codespace-configure.png)
 
 ### 🥈 : Using a local Devcontainer
 
@@ -91,7 +91,7 @@ You will be prompted to open the project in a Dev Container. Click on `Reopen in
 
 If you are not prompted by Visual Studio Code, you can open the command palette (`Ctrl + Shift + P`) and search for `Reopen in Container` and select it: 
 
-![devcontainer-reopen](./assets/devcontainer-reopen.png)
+![devcontainer-reopen](./assets/lab0-prerequisites/devcontainer-reopen.png)
 
 ### 🥉 : Using your own local environment
 
@@ -192,13 +192,13 @@ Then click on **Generate token**. If you need more information on this mechanism
 
 Now, open the resource group deployed previously and open the Key Vault. In the **Secrets** tab, you will find a secret named `Pat`, click on it and then select **New Version** and update the value with your GitHub PAT:
 
-![Key Vault Pat](assets/key-vault-pat.png)
+![Key Vault Pat](assets/lab0-prerequisites/key-vault-pat.png)
 
 ## Activate the Catalog feature
 
 Finally, in the Dev Center, go to **Settings** and then **Configuration** and Click on **Enable Catalog per projects**. This will allow you to define your catalogs at the project level, you will learn more about this in the lab.
 
-![Enable Catalog per projects](assets/dev-center-enable-catalog-per-project.png)
+![Enable Catalog per projects](assets/lab0-prerequisites/dev-center-enable-catalog-per-project.png)
 
 Click on **Apply** and you are ready for the lab!
 
@@ -267,7 +267,7 @@ Create a new Dev Box definition with the following parameters to represent the f
 
 And enable the Hibernate mode. The Hibernation feature is a power-saving state that saves your running applications to your hard disk and then shuts down the virtual machine (VM). When you resume the VM, all your previous work is restored.
 
-![Dev Box definition](assets/dev-center-dev-box-definitions-create.png)
+![Dev Box definition](assets/lab1-devbox-mgmt/dev-center-dev-box-definitions-create.png)
 
 Repeat the same steps to create a new Dev Box definition for the backend:
 
@@ -279,7 +279,7 @@ Repeat the same steps to create a new Dev Box definition for the backend:
 
 You have now created two Dev Box definitions, one for the frontend and one for the backend.
 
-![Dev Box definitions](assets/dev-center-dev-box-definitions.png)
+![Dev Box definitions](assets/lab1-devbox-mgmt/dev-center-dev-box-definitions.png)
 
 These Dev Boxes definitions are now available at the Dev Center level, the next step is to assign them to a project to be consumed by the developers of this specific project.
 
@@ -302,17 +302,17 @@ A project in Dev Center represent a group of developers working on a company pro
 
 Inside your Dev Center, go to **Manage** > **Projects** and click on **Create**.
 
-![Create a project](assets/dev-center-new-project.png)
+![Create a project](assets/lab1-devbox-mgmt/dev-center-new-project.png)
 
 Give a name that start with `prj-ops-<your-initials>` and then add your initials.
 
-![New project](assets/project-new.png)
+![New project](assets/lab2-deployenv/project-new.png)
 
 In the **Dev Box Management** panel you can directly fix the number of Dev Boxes for this project.
 
 Select **Yes** and set the maximum number of Dev Boxes that can be deployed per each developer to `5`:
 
-![Project max dev boxes](assets/project-new-max-dev-boxes.png)
+![Project max dev boxes](assets/lab1-devbox-mgmt/project-new-max-dev-boxes.png)
 
 Click on **Review + Create** and then **Create**.
 
@@ -351,11 +351,11 @@ For the network part, you can inject a Dev Box into a specific VNet but for this
 
 Select `Local Administrator` so the user can have full control over the Dev Box:
 
-![Dev Box pool part 1](assets/project-dev-box-pool-part-1.png)
+![Dev Box pool part 1](assets/lab1-devbox-mgmt/project-dev-box-pool-part-1.png)
 
 To save on costs, you can enable an auto-stop schedule on a dev box pool. Microsoft Dev Box attempts to stop all dev boxes in the pool at the time specified in the schedule. You can configure one stop time in one timezone for each pool.
 
-![Dev Box pool part 2](assets/project-dev-box-pool-part-2.png)
+![Dev Box pool part 2](assets/lab1-devbox-mgmt/project-dev-box-pool-part-2.png)
 
 Check the licence agreement and click on **Create**.
 
@@ -369,7 +369,7 @@ You have now created two Dev Box pools, one for the frontend and one for the bac
 
 Go to the **Settings** tab and click on **Identity** and add a System Assigned Managed Identity:
 
-![Project identity](assets/project-identity.png)
+![Project identity](assets/lab1-devbox-mgmt/project-identity.png)
 
 Wait for the identity to be created.
 
@@ -436,11 +436,11 @@ In our case you already have a folder called `tasks` available in this [Git repo
 
 To enable the use of catalog items, go to your project, under **Settings**, select **Catalogs**. 
 
-![Project enable catalog items](assets/project-enable-catalog-items.png)
+![Project enable catalog items](assets/lab1-devbox-mgmt/project-enable-catalog-items.png)
 
 In the **Catalog item settings** pane, select **Azure deployment environment definitions** to enable the use of environment definitions at the project level.
 
-![Project enable catalog items validation](assets/project-enable-catalog-items-validation.png)
+![Project enable catalog items validation](assets/lab1-devbox-mgmt/project-enable-catalog-items-validation.png)
 
 Now, you can add a catalog to the project.
 
@@ -464,7 +464,7 @@ Now, you can add a catalog to the project.
 
 Let's add the catalog to the project. Go to the project **Settings** and then **Catalogs** and click on **Add**.
 
-![Project add catalog](assets/project-add-dev-box-catalog.png)
+![Project add catalog](assets/lab1-devbox-mgmt/project-add-dev-box-catalog.png)
 
 Set the `Repo` url to `https://github.com/microsoft/hands-on-lab-platform-engineering-for-ops.git` and target the `main` branch. 
 
@@ -490,7 +490,7 @@ In your project go to **Access control (IAM)** and add the role `DevCenter Dev B
 
 Go to the [Dev Box Portal][dev-box-portal] and sign in, you should see a button to create a new Dev Box and be able to pass a yaml file to customize your Dev Box similar to the one we saw previously.
 
-![Dev Portal for Developers](assets/dev-box-portal-developers.png)
+![Dev Portal for Developers](assets/lab1-devbox-mgmt/dev-box-portal-developers.png)
 
 ## Act as a project administrator
 
@@ -536,11 +536,11 @@ Click on **Add**, you will be redirected to a form where you can select the envi
 
 So for each environment, select the role you want to give to your developers and click on **Add**.
 
-![Project environment](assets/project-link-environment.png)
+![Project environment](assets/lab2-deployenv/project-link-environment.png)
 
 If everything is ok, you should see the 3 environments linked to the project in the **Environment Type** section:
 
-![Project environment linked](assets/project-environment-linked.png)
+![Project environment linked](assets/lab2-deployenv/project-environment-linked.png)
 
 </details>
 
@@ -596,7 +596,7 @@ https://<YOUR-KEY-VAULT-NAME>.vault.azure.net/secrets/Pat
 
 Click on **Add** and you should see the catalog added to the project with a status of `Sync Successful`.
 
-![Project Add Environment Catalog](assets/project-add-environment-catalog.png)
+![Project Add Environment Catalog](assets/lab2-deployenv/project-add-environment-catalog.png)
 
 You now have a catalog of environments available in your project. Developers assigned to this project will be able to create environments using the templates defined in this catalog.
 </details>
@@ -621,7 +621,7 @@ Let's do this by providing an APIM environment using Bicep.
 
 In your own GitHub account, create a new repository **Public** and in a `CustomEnvironments` folder create an `Apim` folder the following files:
 
-![Project custom catalog](assets/project-custom-catalog.png)
+![Project custom catalog](assets/lab2-deployenv/project-custom-catalog.png)
 
 The `environment.yaml` contains the following:
 
@@ -668,13 +668,13 @@ Of course the deployment can be more complex, with multiple bicep files and modu
 
 Now, you can add this catalog to the project in the same way you did for the previous catalog:
 
-![Project custom catalog added](assets/project-add-custom-catalog.png)
+![Project custom catalog added](assets/lab2-deployenv/project-add-custom-catalog.png)
 
 If you need to update the catalog, you can do it by updating the files in the repository and then click on **Sync** in the catalog settings of the project.
 
 Finally you should see your 3 catalogs:
 
-![Project catalogs](assets/project-all-catalogs.png)
+![Project catalogs](assets/lab2-deployenv/project-all-catalogs.png)
 
 </details>
 
@@ -688,7 +688,7 @@ Go to the [Dev Box Portal][dev-box-portal] and sign in.
 
 You should see a drop down button to create a new environment:
 
-![Dev Box Portal Environment Creation](assets/dev-box-portal-environment-created.png)
+![Dev Box Portal Environment Creation](assets/lab2-deployenv/dev-box-portal-environment-created.png)
 
 You can select the environment you want to create and pass the parameters needed for the deployment. After the deployment is done you can see the resources deployed by just clicking in the **Environment resources** link.
 
@@ -702,7 +702,7 @@ Add the role `DevCenter Project Admin` to your self at the project level.
 
 In the Azure Portal, in your project go to **Manage** and then **Environments**. You should see the environments created by the developers:
 
-![Project environments](assets/project-environment-overview.png)
+![Project environments](assets/lab2-deployenv/project-environment-overview.png)
 
 You can see the associated cost for each deployment using the `View Cost` tab and potential advisor recommendations. As an Ops this will help you to control the cost of the deployments and to update your Infra As Code templates based on the security recommendations.
 
@@ -713,8 +713,598 @@ You can see the associated cost for each deployment using the `View Cost` tab an
 
 ---
 
-# Lab 3 
+# Lab 3 - Governance with Azure Policy
 
+## Introduction
+In this lab, we will explore Azure Policy, a service in Azure that you use to create, assign and manage policies. These policies enforce different rules and effects over your resources, so those resources stay compliant with your corporate standards and service level agreements.
+
+There are few key concepts to understand before we start with the lab:
+
+- The first object to create when working with Azure Policies, is to create a **Policy Definition**. A policy definition expresses what to evaluate and what action to take. For example, you could have a policy definition that restricts the regions available to resources.
+- Some **Policy Definitions** are built-in, and you can also create custom policies. The built-in policies are provided by Azure, and you can't modify them. Custom policies are created by you, and you can define the conditions under which they are enforced.
+- Once you have a policy definition, you can assign it to a specific scope. The scope of a **Policy Assignment** can be a management group, a subscription, a resource group, or a resource. When you assign a policy, it starts to evaluate resources in the scope. Of course, you can exclude specific child scopes from the evaluation.
+- When a policy is assigned, it's enforced. If a resource is not compliant with the policy, the policy's defined effect is applied. The effect could be to deny the request, audit the request, append a field to the request, or deploy a resource.
+- In some cases, you might want to exempt a resource from a policy assignment. You can do this by creating a **Policy Exemption**. An exemption is a way to exclude a specific resource from a policy's evaluation. 
+
+<div class="tip" data-title="Pre-requisites">
+
+> - An active Azure subscription.
+> - Basic understanding of Azure resources.
+
+<details>
+<summary>📚 Toggle to discover your lab resources</summary>
+
+In the Azure Portal, there are dedicated resource groups for each participant.
+
+![Azure Policy Hands on Lab Resource Groups](assets/lab3-azurepolicy/azpolicy-resourcegroups.png)
+
+You will find a virtual network with an Azure Resource Manager template spec that deploys a network security group with few inbound rules. 
+
+![Hands on Lab Resources](assets/lab3-azurepolicy/azpolicy-resources.png)
+
+</details>
+
+</div>
+
+Azure Policy has many effects, but in this lab we are going to focus on the 3 main effects that can be applied to resources: Deny, Modify, and DeployIfNotExists. Each effect has a different impact on the resources that are evaluated against the policy.
+
+<div class="task" data-title="Tasks">
+
+> - For each effect, you'll be deploying a Policy Definition and assign on your dedicated resource groups (or sub resources).
+> - You will then follow the instructions and manipulate your dedicated resources to trigger the policy effect (whether it is a deny, modify, or a deployIfNotExists).
+> - You will then check the compliance status of your resources.
+> - You will change the default parameters to see how the policies change their behavior.
+
+</div>
+
+## 1- Getting started with the Deny effect
+
+Let's start by crafting a policy that denies the creation of network security group rules that allow inbound traffic from public IP addresses into the virtual network. The policy will take as a parameter a list of allowed IP ranges in case we need to allow some specific IP addresses (like CDN IPs or Proxy IPs).
+
+<details>
+<summary>📚 STEP 1 - Discover the policy definition of deploy</summary>
+
+```json
+{
+  "displayName": "CD-DenyPubInbound-NSG",
+  "description": "This policy denies any inbound NSG rules that allows traffic from public addresses that are not in the list of allowed IPs.",
+  "policyType": "Custom",
+  "mode": "All",
+  "parameters": {
+    "listOfAllowedIps": {
+      "type": "Array",
+      "metadata": {
+        "displayName": "List of Allowed inbound sources IP ranges",
+        "description": "List of Allowed inbound sources IP ranges"
+      },
+      "defaultValue": [
+        "10.0.0.0/8",
+        "172.16.0.0/12",
+        "192.168.0.0/16"
+      ]
+    }
+  },
+  "policyRule": {
+    "if": {
+      "anyOf": [
+        {
+          "allOf": [
+            {
+              "field": "type",
+              "equals": "Microsoft.Network/networkSecurityGroups"
+            },
+            {
+              "count": {
+                "field": "Microsoft.Network/networkSecurityGroups/securityRules[*]",
+                "where": {
+                  "allOf": [
+                    {
+                      "field": "Microsoft.Network/networkSecurityGroups/securityRules[*].access",
+                      "equals": "Allow"
+                    },
+                    {
+                      "field": "Microsoft.Network/networkSecurityGroups/securityRules[*].direction",
+                      "equals": "Inbound"
+                    },
+                    {
+                      "anyOf": [
+                        {
+                          "field": "Microsoft.Network/networkSecurityGroups/securityRules[*].sourceAddressPrefix",
+                          "equals": "*"
+                        },
+                        {
+                          "field": "Microsoft.Network/networkSecurityGroups/securityRules[*].sourceAddressPrefix",
+                          "equals": "Internet"
+                        },
+                        {
+                          "count": {
+                            "value": "[parameters('listOfAllowedIps')]",
+                            "name": "allowedIps",
+                            "where": {
+                              "value": "[ ipRangeContains( current('allowedIps'), if ( and(not(empty(current('Microsoft.Network/networkSecurityGroups/securityRules[*].sourceAddressPrefix'))), contains(current('Microsoft.Network/networkSecurityGroups/securityRules[*].sourceAddressPrefix'), '.'))  , current('Microsoft.Network/networkSecurityGroups/securityRules[*].sourceAddressPrefix'), current('allowedIps') ) )]",
+                              "equals": true
+                            }
+                          },
+                          "equals": 0
+                        },
+                        {
+                          "count": {
+                            "field": "Microsoft.Network/networkSecurityGroups/securityRules[*].sourceAddressPrefixes[*]",
+                            "where": {
+                              "count": {
+                                "value": "[parameters('listOfAllowedIps')]",
+                                "name": "allowedIps",
+                                "where": {
+                                  "value": "[ ipRangeContains( current('allowedIps'), if ( contains(current('Microsoft.Network/networkSecurityGroups/securityRules[*].sourceAddressPrefixes[*]'), '.'), current('Microsoft.Network/networkSecurityGroups/securityRules[*].sourceAddressPrefixes[*]'), current('allowedIps') ) ) ]",
+                                  "equals": true
+                                }
+                              },
+                              "equals": 0
+                            }
+                          },
+                          "notEquals": 0
+                        }
+                      ]
+                    }
+                  ]
+                }
+              },
+              "notEquals": 0
+            }
+          ]
+        },
+        {
+          "allOf": [
+            {
+              "field": "type",
+              "equals": "Microsoft.Network/networkSecurityGroups/securityRules"
+            },
+            {
+              "field": "Microsoft.Network/networkSecurityGroups/securityRules/access",
+              "equals": "Allow"
+            },
+            {
+              "field": "Microsoft.Network/networkSecurityGroups/securityRules/direction",
+              "equals": "Inbound"
+            },
+            {
+              "anyOf": [
+                {
+                  "field": "Microsoft.Network/networkSecurityGroups/securityRules/sourceAddressPrefix",
+                  "equals": "*"
+                },
+                {
+                  "field": "Microsoft.Network/networkSecurityGroups/securityRules/sourceAddressPrefix",
+                  "equals": "Internet"
+                },
+                {
+                  "count": {
+                    "value": "[parameters('listOfAllowedIps')]",
+                    "name": "allowedIps",
+                    "where": {
+                      "value": "[ ipRangeContains( current('allowedIps'), if ( and(not(empty(field('Microsoft.Network/networkSecurityGroups/securityRules/sourceAddressPrefix'))), contains(field('Microsoft.Network/networkSecurityGroups/securityRules/sourceAddressPrefix'), '.'))  , field('Microsoft.Network/networkSecurityGroups/securityRules/sourceAddressPrefix'), current('allowedIps') ) )]",
+                      "equals": true
+                    }
+                  },
+                  "equals": 0
+                },
+                {
+                  "count": {
+                    "field": "Microsoft.Network/networkSecurityGroups/securityRules/sourceAddressPrefixes[*]",
+                    "where": {
+                      "count": {
+                        "value": "[parameters('listOfAllowedIps')]",
+                        "name": "allowedIps",
+                        "where": {
+                          "value": "[ ipRangeContains( current('allowedIps'), if ( contains(current('Microsoft.Network/networkSecurityGroups/securityRules/sourceAddressPrefixes[*]'), '.'), current('Microsoft.Network/networkSecurityGroups/securityRules/sourceAddressPrefixes[*]'), current('allowedIps') ) ) ]",
+                          "equals": true
+                        }
+                      },
+                      "equals": 0
+                    }
+                  },
+                  "notEquals": 0
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "then": {
+      "effect": "deny"
+    }
+  }
+}
+
+```
+
+**Understanding the policy:**
+
+> - The provided policy definition's purpose is to deny any inbound Network Security Group (NSG) rules that allow traffic from public addresses not in a predefined list of allowed IPs.
+> - The policy is of type "Custom" and operates in "All" mode. It has a parameter "listOfAllowedIps" which is an array. The default values for this array are "10.0.0.0/8", "172.16.0.0/12", and "192.168.0.0/24". These are IP ranges in private network address spaces.
+> - The policy rule is defined under "policyRule". It uses a conditional "if" statement that checks for multiple conditions using "anyOf" and "allOf" operators. The conditions check the type of the resource, the access type, the direction of the rule, and the source address prefix. If any of these conditions are met, the policy effect is set to "deny", which means the policy will block the creation or modification of the NSG rule.
+> - The first set of conditions specifically look for an NSG ("Microsoft.Network/networkSecurityGroups") that contains at least 1 non-compliant rule. The second set of conditions look for a unitary NSG rule ("Microsoft.Network/networkSecurityGroups/securityRules") that have "Allow" access and "Inbound" direction. It also checks if the source address prefix is "*" (which means all addresses), "Internet", or not in the list of allowed IPs. 
+> - The policy uses the "ipRangeContains" function to check if the source address prefix is within the allowed IP ranges. If the source address prefix is not in the allowed IP ranges, the policy will deny the NSG rule. 
+> - This policy is useful for ensuring that only specific IP ranges can access resources in your Azure environment, enhancing the security of your network.
+
+</details>
+
+<details>
+<summary> 📚 STEP 2 - Deploy the policy definition </summary>
+
+1. In the Azure Portal, navigate to the **Policy** page.
+![Policy Page](assets/lab3-azurepolicy/azpolicy-resources.png)
+
+2. Then click on **Definitions** and then **+ Policy definition**.
+![New Policy Definition](assets/lab3-azurepolicy/azpolicy-new-policydefinition-1.png)
+
+3. Copy the policy definition JSON and paste it in the **Policy definition** pane and click on save. Make sure to rename the policy definition to 'CD-Deny-MS-USER-###' where ### is your initials.
+![Policy Definition Pane](assets/lab3-azurepolicy/azpolicy-new-policydefinition-2.png)
+
+</details>
+
+<details>
+<summary> 📚 STEP 3 - Assign the policy </summary>
+
+1. In the Azure Policy page, click on **Assign policy**
+![Policy Page](assets/lab3-azurepolicy/azpolicy-deny-policyassignment-1.png)
+
+2. Select the scope of the assignment. In this case, select the resource group that contains the network security group.
+![Policy Assignment Scope](assets/lab3-azurepolicy/azpolicy-deny-policyassignment-2.png)
+![Policy Assignment Scope](assets/lab3-azurepolicy/azpolicy-deny-policyassignment-3.png)
+
+3. Click on **Next** button and leave the default values.
+![Policy Assignment Parameters](assets/lab3-azurepolicy/azpolicy-deny-policyassignment-4.png)
+
+4. Click on **Next** button once again and uncheck **Only show parameters that need input or review** to see the default values of the policy parameter. We are going to leave the default values here for now.
+![Policy Assignment Parameters](assets/lab3-azurepolicy/azpolicy-deny-policyassignment-5.png)
+
+5. Skip the next steps and click on **Review + create** and then **Create** to assign the policy.
+![Policy Assignment Parameters](assets/lab3-azurepolicy/azpolicy-deny-policyassignment-6.png)
+
+</details>
+
+<details>
+<summary> 📚 STEP 4 - Test the policy </summary>
+
+<div class="task" data-title="Tasks">
+
+> 1. In your resource group, navigate to the template spec and click on the **Deploy** button to deploy a network security group with few default inbound rules that are compliant. Leave the default parameters and click on **Review + Create**.
+![Deploy NSG](assets/lab3-azurepolicy/azpolicy-deny-tests-1.png)
+![Deploy NSG](assets/lab3-azurepolicy/azpolicy-deny-tests-2.png)
+> 2. After the deployment is done, navigate to the network security group and try to add a new inbound rule that allows traffic from a public IP address that is not in the list of allowed IPs. You should see an error message that the operation is denied by the policy.
+![Deploy Non-compliant NSG rule](assets/lab3-azurepolicy/azpolicy-deny-tests-3.png)
+![Deploy Non-compliant NSG rule](assets/lab3-azurepolicy/azpolicy-deny-tests-4.png)
+![Deploy Non-compliant NSG rule](assets/lab3-azurepolicy/azpolicy-deny-tests-5.png)
+
+</div>
+
+<div class="tip" data-title="Tips">
+
+> - If the policy error message seems unclear, you can set a human-readable non-compliance message in the policy assignment. This message will be displayed to the user when the policy denies the operation. To do so, you can go to **Policy** > **Assignments** > Select the assignment > **Edit assignment** > **Non-compliance message**.
+![Custom Non Compliant Message Setting](assets/lab3-azurepolicy/azpolicy-deny-tests-6.png)
+> - Try again to add a rule that is non-compliant, and see if the error message is more explicit. You should be having something like this:
+![Custom Non Compliant Message Display](assets/lab3-azurepolicy/azpolicy-deny-tests-7.png)
+> - Keep playing around with the policy and try to understand the conditions that trigger the deny effect.
+</div>
+
+</details>
+
+## 2- Enforce rules on-the-fly with the Modify Effect
+
+The modify effect is a powerful effect that allows you to modify the properties of a resource to bring it into compliance with the policy.
+
+The policies of **modify** effect intercept any operation on the resource and apply the changes to the resource before the operation is completed. This effect is useful for enforcing configurations on resources in real time. This means any operation that doesn't comply with the policy will be modified to comply with the policy.
+
+Let's create a policy that modifies the tags of a resource group. The policy will add a tag to the resource group if it doesn't already exist.
+
+<details>
+<summary>📚 STEP 1 - Discover the policy definition of modify</summary>
+
+```json
+{
+  "displayName": "CD-AddImmuTags-RG",
+  "policyType": "Custom",
+  "mode": "All",
+  "description": "Add immutable tags to resource groups",
+  "parameters": {
+    "ImmutableTagName": {
+      "type": "String",
+      "metadata": {
+        "displayName": "Immutable Tag Name",
+        "description": "Immutable Tag Name"
+      },
+      "defaultValue": "Environment"
+    },
+    "ImmutableTagValue": {
+      "type": "String",
+      "metadata": {
+        "displayName": "Immutable Tag Value",
+        "description": "Immutable Tag Value"
+      },
+      "defaultValue": "NonProduction"
+    }
+  },
+  "policyRule": {
+    "if": {
+      "allOf": [
+        {
+          "field": "type",
+          "equals": "Microsoft.Resources/subscriptions/resourceGroups"
+        },
+        {
+          "field": "[concat('tags[', parameters('ImmutableTagName'), ']')]",
+          "notEquals": "[parameters('ImmutableTagValue')]"
+        }
+      ]
+    },
+    "then": {
+      "effect": "modify",
+      "details": {
+        "roleDefinitionIds": [
+          "/providers/Microsoft.Authorization/roleDefinitions/b24988ac-6180-42a0-ab88-20f7382dd24c"
+        ],
+        "operations": [
+          {
+            "operation": "addOrReplace",
+            "field": "[concat('tags[', parameters('ImmutableTagName'), ']')]",
+            "value": "[parameters('ImmutableTagValue')]"
+          }
+        ]
+      }
+    }
+  }
+}
+```
+
+> - The provided policy definition's purpose is to add an immutable tag to a resource group if it doesn't already exist. The policy is of type "Custom" and operates in "All" mode. It has two parameters: "ImmutableTagName" and "ImmutableTagValue". The default values for these parameters are "Environment" and "NonProduction" respectively.
+> - Whenever a resource group is **created** or **modified**, the policy checks if the tag with the name specified in "ImmutableTagName" has the value specified in "ImmutableTagValue". If the tag doesn't exist or has a different value, the policy will modify the resource group by adding or replacing the tag with the specified value.
+
+</details>
+
+<details>
+<summary> 📚 STEP 2 and 3 - Deploy and Assign the policy definition on your resource group </summary>
+
+<div class="task" data-title="Tasks">
+
+> - Try to reproduce the steps 2 and 3 from the previous challenge but with the new **modify** policy definition.
+> - Try to change the default values of the parameters to see how the policy behaves.
+> - Respect the naming convention for the policy definition and the policy assignment, by including your initials to the names.
+> - When assigning the policy, beware to select your dedicated resource group as a scope and don't overstep on other resource groups.
+
+</div>
+
+<div class="tip" data-title="Tips">
+
+> - Try to apply a remediation task on your resource group as part of the assignment to enforce the tag.
+![Create a Remediation Task](assets/lab3-azurepolicy/azpolicy-modify-remediation-1.png)
+![Create a Remediation Task - Evaluating](assets/lab3-azurepolicy/azpolicy-modify-remediation-2.png)
+![Create a Remediation Task - Complete](assets/lab3-azurepolicy/azpolicy-modify-remediation-3.png)
+> - Once the remediation complete you can verify that the tag has been added to the resource group.
+![Verify presence of tags](assets/lab3-azurepolicy/azpolicy-modify-remediation-4.png)
+> - You can verify in the activity log that the managed identity of the policy has assignment was used to modify the resource group (to write the tags).
+![Verify Activity Log](assets/lab3-azurepolicy/azpolicy-modify-remediation-5.png)
+</div>
+
+</details>
+
+<details>
+<summary> 📚 STEP 4 - Test the policy </summary>
+
+<div class="task" data-title="Tasks">
+
+> - In you resource group, navigate to the tags blade of the resource group and check if the tag has been added.
+> - It generally takes few minutes for the policy to be applied. If the tag is not added, wait a few more minutes and check again.
+> - When the tag appears on the resource group, try to modify its value and see if the policy restores the default value.
+> - Try to delete the tag and see if the policy adds it back.
+
+</div>
+
+<div class="tip" data-title="Tips">
+
+> - Every time you modify the tag, refresh the portal to see the changes.
+> - If the remediation task takes too long to apply, you can trigger the **modify** policy by adding any random tag. The policy should append the expected tag to the resource group.
+
+</div>
+
+</details>
+
+## 3- Extend resources with the DeployIfNotExists Effect
+
+<details>
+<summary> 📚 STEP 1 - Discover the policy definition of deployIfNotExists</summary>
+
+```json
+{
+  "displayName": "CD-VnetLinkZone-Dns",
+  "policyType": "Custom",
+  "mode": "All",
+  "description": "This policy definition creates a virtual network link to a private DNS zone.",
+  "parameters": {
+    "privateDnsZoneName": {
+      "type": "String",
+      "metadata": {
+        "displayName": "Private DNS Zone Name",
+        "description": "Name pattern of the private DNS Zone to link to the hub VNET."
+      },
+      "defaultValue": "*.westeurope.azurecontainerapps.io"
+    },
+    "hubVnetResourceId": {
+      "type": "String",
+      "metadata": {
+        "displayName": "Hub virtual network ID",
+        "description": "The resource ID of the hub virtual network to which link the private DNS zone",
+        "strongType": "Microsoft.Network/virtualNetworks",
+        "assignPermissions": true
+      }
+    }
+  },
+  "policyRule": {
+    "if": {
+      "allOf": [
+        {
+          "field": "type",
+          "equals": "Microsoft.Network/privateDnsZones"
+        },
+        {
+          "field": "name",
+          "like": "[parameters('privateDnsZoneName')]"
+        }
+      ]
+    },
+    "then": {
+      "effect": "deployIfNotExists",
+      "details": {
+        "type": "Microsoft.Network/privateDnsZones/virtualNetworkLinks",
+        "existenceCondition": {
+          "field": "Microsoft.Network/privateDnsZones/virtualNetworkLinks/virtualNetwork.id",
+          "equals": "[parameters('hubVnetResourceId')]"
+        },
+        "name": "[concat(field('name'), '/link-to-hub-set-by-policy')]",
+        "roleDefinitionIds": [
+          "/providers/Microsoft.Authorization/roleDefinitions/b24988ac-6180-42a0-ab88-20f7382dd24c"
+        ],
+        "deployment": {
+          "properties": {
+            "mode": "incremental",
+            "template": {
+              "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+              "contentVersion": "1.0.0.0",
+              "parameters": {
+                "linkName": {
+                  "type": "string"
+                },
+                "virtualNetworkId": {
+                  "type": "string"
+                }
+              },
+              "resources": [
+                {
+                  "name": "[parameters('linkName')]",
+                  "type": "Microsoft.Network/privateDnsZones/virtualNetworkLinks",
+                  "apiVersion": "2018-09-01",
+                  "location": "global",
+                  "properties": {
+                    "registrationEnabled": false,
+                    "virtualNetwork": {
+                      "id": "[parameters('virtualNetworkId')]"
+                    }
+                  }
+                }
+              ]
+            },
+            "parameters": {
+              "linkName": {
+                "value": "[concat(field('name'), '/link-to-hub-set-by-policy')]"
+              },
+              "virtualNetworkId": {
+                "value": "[parameters('hubVnetResourceId')]"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "versions": [
+    "1.0.0"
+  ]
+}
+```
+
+> - The provided policy definition's purpose is to create a virtual network link to a private DNS zone if it doesn't already exist. The policy is of type "Custom" and operates in "All" mode. It has two parameters: "privateDnsZoneName" and "hubVnetResourceId". The default value for "privateDnsZoneName" is "*.northeurope.azurecontainerapps.io".
+> - The virtual network link of a private DNS zone is created only if the private DNS zone name matches the pattern specified in "privateDnsZoneName". The policy checks if the virtual network link already exists by comparing the virtual network ID with the value specified in "hubVnetResourceId". If the virtual network link doesn't exist, the policy will deploy the virtual network link to the private DNS zone.
+> - This policy is super userful for ensuring automated links between certain Private DNS Zones to specific virtual network to enable DNS resolution with other virtual networks.
+
+</details>
+
+<details>
+<summary> 📚 STEP 2 and 3 - Deploy and Assign the policy definition on your resource group </summary>
+
+<div class="task" data-title="Tasks">
+
+> - Try to reproduce the steps 2 and 3 from the previous challenge but with the new **deployIfNotExists** policy definition.
+> - Try to change the default values of the parameters to see how the policy behaves. You may want to have your own private DNS zone pattern pattern.
+> - Respect the naming convention for the policy definition and the policy assignment, by including your initials to the names.
+> - When assigning the policy, beware to select your dedicated resource group as a scope and don't overstep on other resource groups.
+> - When assigning the policy, beware to select your dedicated virtual network as a **hubVnetResourceId** parameter.
+![Assign the DeployIfNotExists policy](assets/lab3-azurepolicy/azpolicy-deployifnotexist-assignment.png)
+
+</div>
+</details>
+
+<details>
+<summary> 📚 STEP 4 - Test the policy </summary>
+
+<div class="task" data-title="Tasks">
+
+> - In your resource group, create a new private DNS zone that matches the pattern specified in the policy definition.
+![Create a Private DNS Zone](assets/lab3-azurepolicy/azpolicy-deployifnotexist-test-1.png)
+> - Check if the virtual network link is created automatically.
+![Verify the virtual network link](assets/lab3-azurepolicy/azpolicy-deployifnotexist-test-2.png)
+> - Verify the activity logs to see the deployment of the virtual network link.
+![Verify the virtual network link](assets/lab3-azurepolicy/azpolicy-deployifnotexist-test-3.png)
+</div>
+
+</details>
+
+## 4- Understand Exemptions
+
+<details> 
+<summary> 📚 STEP 1 - Create a second NSG and exempting it  </summary>
+
+<div class="task" data-title="Tasks">
+
+> - Create a new network security group in your exisiting resource group.
+![Create a new NSG](assets/lab3-azurepolicy/azpolicy-exemptions-step1.png)
+> - The new network security group should appear alongside the existing one.
+![Create a new NSG](assets/lab3-azurepolicy/azpolicy-exemptions-step2.png)
+> - Go to **Policy** > **Assignments** > Select your **```CA-Deny-MS-User-###```** assignment, and click on **Create Exemption**.
+![Create an Exemption](assets/lab3-azurepolicy/azpolicy-exemptions-step3.png)
+> - Select **nsg-test-2** as the scope of the exemption and then click on **Review + Create**.
+![Create an Exemption - Scope](assets/lab3-azurepolicy/azpolicy-exemptions-step4.png)
+
+</div>
+
+</details>
+
+<details>
+<summary> 📚 STEP 2 - Test the exemption </summary>
+
+<div class="task" data-title="Tasks">
+
+> - Go to the new network security group and try to add a non-compliant inbound rule.
+![Create a non-compliant rule](assets/lab3-azurepolicy/azpolicy-exemptions-test-step1.png)
+> - You should see that the operation is not denied by the policy.
+![Create a non-compliant rule](assets/lab3-azurepolicy/azpolicy-exemptions-test-step2.png)
+> - Meanwhile, the other network security group should still be denied.
+![Create a non-compliant rule on unexempted nsg](assets/lab3-azurepolicy/azpolicy-exemptions-test-step3.png)
+![Create a non-compliant rule on unexempted nsg- denied](assets/lab3-azurepolicy/azpolicy-exemptions-test-step4.png)
+</div>
+
+</details>
+
+<details> 
+<summary> 📚 STEP 3 - Tighten-up </summary>
+
+<div class="task" data-title="Tasks">
+
+> - It is important to note that when creating an exemption for a resource, it is generally discouraged to exempt everything. By exempting the policy assignment in the previous challenge, you have allowed all source address prefixes, which is not ideal in real-life scenarios.
+> - In practice, cybersecurity teams typically exempt specific patterns rather than granting full access. Therefore, we need to protect the new nsg against unallowed patterns by enforcing a new policy assignment on the exempted NSG and that includes the new rule pattern in the default parameter.
+> - Let's assume that the cyber team has only allowed 8.8.8.8 as a valid source address. You can add this address to the default parameter of the policy assignment and then test the exemption again.
+> - **OUTCOME: The new NSG should only allow inboud rules with 8.8.8.8 as a source but denies everything else (just like the other NSG)**
+
+</div>
+</details>
+
+## 5- Reading the Compliance Report
+
+At the end of this workshop take a time to read the compliance report of your resources. You can find the compliance report in the **Policy** blade of the Azure Portal.
+
+![Policy Compliance Dashboard](assets/lab3-azurepolicy/azpolicy-compliance.png)
+
+Azure Policy compliance data could be used to trigger automations that can remediate non-compliant resources. You can also use the compliance data to generate reports and monitor the security and compliance posture of your resources.
 
 ---
 
@@ -748,7 +1338,7 @@ All the features that you will see in this lab can be control globally in a GitH
 
 Let's activate Dependabot in your repository, go to **Settings** > **Code security and analysis** and enable **Dependabot alerts** and **Dependabot security updates**:
 
-![Enable Dependabot](assets/ghas-enable-dependabot.png)
+![Enable Dependabot](assets/lab4-ghas/ghas-enable-dependabot.png)
 
 <div class="task" data-title="Tasks">
 
@@ -834,19 +1424,19 @@ Let's activate Dependabot in your repository, go to **Settings** > **Code securi
 
 If you go to the **Insights** tab and then **Dependency graph** you should see the details of all depencies of your project and also alerts or warning if some of them are not up to date:
 
-![Dependency Graph](assets/ghas-dependency-graph.png)
+![Dependency Graph](assets/lab4-ghas/ghas-dependency-graph.png)
 
 As you can see two packages `minimist` and `axios` are not up to date and present risks.
 
 In parallel, if you go to the **Security** tab in the **Dependabot** section you can see that 3 alerts regarding those outdated packages has been raised. Most importantly, after a few seconds `Dependabot alert` has already detected the issues and suggested a Pull Request to fix those issues:
 
-![Dependabot Alerts](assets/ghas-dependabot-alerts.png)
+![Dependabot Alerts](assets/lab4-ghas/ghas-dependabot-alerts.png)
 
 Dependabot alerts inform you when your code depends on a package that is insecure. These Dependabot alerts reference the [GitHub Advisory Database][github-advisory-db]. This list of known security vulnerabilities and malware group two categories: **GitHub reviewed advisories** and **unreviewed advisories**.
 
 For each alert `Dependabot security updates` has beed used to give you more details on the alert:
 
-![Security Details](assets/ghas-alert-detail.png)
+![Security Details](assets/lab4-ghas/ghas-alert-detail.png)
 
 Then you can click on the **Review security update** which will redirect you to the associated Pull Request.
 
@@ -920,7 +1510,7 @@ updates:
 
 Commit this file and after a few minutes you should see a new Pull Request automatically created to suggest the update to the latest version of the `actions/checkout`.
 
-![GitHub Actions Pull Request](assets/ghas-github-actions-pull-request.png)
+![GitHub Actions Pull Request](assets/lab4-ghas/ghas-github-actions-pull-request.png)
 
 You can then review the changes and accept the Pull Request.
 
@@ -943,7 +1533,7 @@ Let's create an empty file called `main.js` in your repository. You will add som
 
 To enable code scanning, go to the **Settings** tab and select **Code security and analysis**, then go to **Code scanning** inside and select **Set up** and **Default**.
 
-![Enable Code Scanning](assets/ghas-enable-code-scanning.png)
+![Enable Code Scanning](assets/lab4-ghas/ghas-enable-code-scanning.png)
 
 In the **Languages to analyze** you should have `JavaScript/TypeScript` selected.
 
@@ -953,11 +1543,11 @@ The **Scan events** section defines when CodeQL should scan. In this case, it's 
 
 Click on **Enable CodeQL** and wait for the setup to be completed.
 
-![Code Scanning Configuration](assets/ghas-code-scanning-configuration.png)
+![Code Scanning Configuration](assets/lab4-ghas/ghas-code-scanning-configuration.png)
 
 You can see the status of the setup in the **CodeQL Setup** workflow in the **Action** tab:
 
-![Code Scanning Setup](assets/ghas-code-scanning-setup.png)
+![Code Scanning Setup](assets/lab4-ghas/ghas-code-scanning-setup.png)
 
 ### Detect a vulnerability
 
@@ -979,11 +1569,11 @@ Go back to the **Actions** tab and you should see a new workflow called `CodeQL`
 
 At the end of the execution of this workflow, you will see a new alert raised inside the **Security** panel of your repository, in the **code scanning** section.
 
-![Code Scanning Issue raised](assets/ghas-code-scanning-issue-raised.png)
+![Code Scanning Issue raised](assets/lab4-ghas/ghas-code-scanning-issue-raised.png)
 
 Select it to see the details of the vulnerability raised:
 
-![Code Scanning Issue Details](assets/ghas-audit-details.png)
+![Code Scanning Issue Details](assets/lab4-ghas/ghas-audit-details.png)
 
 You can see different important informations:
 
@@ -1024,11 +1614,11 @@ Click **Propose changes**, this opens a new pull request, finally click **Create
 
 The CodeQL workflow will run again directly on the Pull Request:
 
-![Code Scanning Pull Request](assets/ghas-pull-request.png)
+![Code Scanning Pull Request](assets/lab4-ghas/ghas-pull-request.png)
 
 After a few minutes you should see a new alerts raised by a GitHub Action Workflow which analyse the new code and directly update the Pull Request with comments like this one:
 
-![CodeQL Alert Raised](assets/ghas-codeql-alert-raised.png)
+![CodeQL Alert Raised](assets/lab4-ghas/ghas-codeql-alert-raised.png)
 
 The vulnerability raised is a Database query built from user-controlled sources which can lead to SQL Injection. More informations about this vulnerability is available [here][codeql-sql-injection]
 
@@ -1053,13 +1643,13 @@ default:
 
 This file contains a fake GitHub PAT token that should be detected by the secret scanning. When you will try to push this file to the repository, the push will be blocked and you should see a message like this one:
 
-![Secret Scanning Push Blocked](assets/ghas-secret-push-protection.png)
+![Secret Scanning Push Blocked](assets/lab4-ghas/ghas-secret-push-protection.png)
 
 Select **It's used for tests** and commit the changes.
 
 If you go to the **Security** tab, you should see the alert raised by the secret scanning:
 
-![Secret scanning tab](assets/ghas-secret-scaning-tab.png)
+![Secret scanning tab](assets/lab4-ghas/ghas-secret-scaning-tab.png)
 
 When you work in a local environment or a GitHub Codespace, secret scanning cannot block your commit but  your push to GitHub will be blocked. In this case, if the secret is active then you will need to remove the secret from your branch and commit history or revoke it.
 
