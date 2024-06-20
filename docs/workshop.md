@@ -35,7 +35,7 @@ During this workshop you will have the instructions to complete each steps. It i
 Before starting this lab, be sure to set your Azure environment :
 
 - An Azure Subscription with the **Owner** role to create and manage the labs' resources and deploy the infrastructure as code
-- Register the Azure providers on your Azure Subscription if not done yet: `Microsoft.DevCenter`, `Microsoft.KeyVault`, `Microsoft.ApiManagement`, `Microsoft.Web`.
+- Register the Azure providers on your Azure Subscription if not done yet: `Microsoft.DevCenter`, `Microsoft.KeyVault`, `Microsoft.ApiManagement`, `Microsoft.Web`, `Microsoft.App`.
 
 To be able to do the lab content you will also need:
 
@@ -141,6 +141,8 @@ az provider register --namespace 'Microsoft.KeyVault'
 az provider register --namespace 'Microsoft.ApiManagement'
 # Azure Functions & Azure Web Apps
 az provider register --namespace 'Microsoft.Web'
+# Azure Container Apps
+az provider register --namespace 'Microsoft.App'
 ```
 
 </details>
