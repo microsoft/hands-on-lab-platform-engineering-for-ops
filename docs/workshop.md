@@ -233,15 +233,17 @@ To reflect a real-world scenario, you will create two Dev Box definitions, one f
 >
 > The frontend Dev Box definition should have the following configuration:
 > - Name: `dev-box-ops-win-11-frontend-<your-initials>`
-> - Image: Pick a Visual Studio 2022 image with Windows 11
+> - Image: Pick `Visual Studio 2022 Enterprise on Windows 11 Enterprise + Microsoft 365 Apps 23H2 | Hibernate supported`
 > - Image version: `Latest`
 > - Compute size: `8 vCPUs, 32 GB RAM`
+> - Storage: `256 GB SSD`
 >
 > The backend Dev Box definition should have the following configuration:
 > - Name: `dev-box-ops-win-11-backend-<your-initials>`
-> - Image: Pick a Visual Studio 2022 image with Windows 11
+> - Image: Pick `Visual Studio 2022 Enterprise on Windows 11 Enterprise + Microsoft 365 Apps 23H2 | Hibernate supported`
 > - Image version: `Latest`
 > - Compute size: `16 vCPUs, 64 GB RAM`
+> - Storage: `256 GB SSD`
 >
 > Enable the Hibernate mode for both Dev Box definitions.
 
