@@ -13,7 +13,7 @@ contacts: # Required. Must match the number of authors
   - "@fethidilmi"
   - "@damienaicheh"
 duration_minutes: 180
-tags: azure, dev center, azure deployment environment, microsoft dev box, azure policies, github, ghas, ops, csu
+tags: azure policies, azure deployment environment, github advanced security, microsoft dev box, dev center, azure, github, ops, csu
 navigation_levels: 3
 ---
 
