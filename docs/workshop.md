@@ -225,6 +225,16 @@ Dev Boxes are VM instances that are created in your Azure subscription and manag
 
 The goal of this lab is to create a project in the Dev Center that represent the project of your team. Then you will assign Dev Box definitions to it and create Dev Box pools. The developers assigned to the project will then be able to deploy Dev Boxes on demands. You will also see how to enable customizations for the Dev Boxes using catalogs.
 
+This is the architecture that this lab cover:
+
+![Dev Box Architecture](assets/lab1-devbox-mgmt/dev-box-architecture-overview.png)
+
+All the lab will be done in the Dev Center resource created. Search for `Dev Center` in your subscription:
+
+![Dev Center search](assets/lab1-devbox-mgmt/dev-center-search.png)
+
+and select the Dev Center created for your with the infra as code.
+
 ## Create a Dev Box definition
 
 To reflect a real-world scenario, you will create two Dev Box definitions, one for the frontend and one for the backend. The Dev Box definitions will have different sizes and configurations to meet the needs of the developers working on the frontend and the backend.
@@ -514,9 +524,13 @@ Dev Center allows you to create and manage deployment environments for your proj
 
 Deployment environments are fully managed environments that can be customized to meet the needs of your developers based on Infra As Code (ARM, Bicep, Terraform, Pulumi). Developers can then deploy pre packaged environments in a safe and controlled way using the best practice of your company.
 
+This is the architecture that this lab cover:
+
+![Architecture Overview](assets/lab2-deployenv/ade-architecture-overview.png)
+
 ## Add an environment to the project
 
-If you go to your Dev Center, in the **Environment Configuration** and then **Environment Type** section, you will see that 3 environments are already available: `dev`, `test`, and `prod`. Each environment can be linked to a specific subscription but for this lab, you will use the same subscription for all the environments.
+Go back to your Dev Center, in the **Environment Configuration** and then **Environment Type** section, you will see that 3 environments are already available: `dev`, `test`, and `prod`. Each environment can be linked to a specific subscription but for this lab, you will use the same subscription for all the environments.
 
 Those environments are the only ones available for all the projects linked to the Dev Center. Each project can refer to one or more of these environments. You can give different permissions to the developers to each environment for each project.
 
