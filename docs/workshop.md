@@ -199,7 +199,7 @@ Now, open the resource group deployed previously and open the Key Vault. In the 
 
 ## Activate the Catalog feature
 
-Finally, in the Dev Center, go to **Settings** and then **Configuration** and Click on **Enable Catalog per projects**. This will allow you to define your catalogs at the project level, you will learn more about this in the lab.
+Finally, in the Dev Center, go to **Settings** and then **Dev center settings** and Click on **Enable Catalog per projects**. This will allow you to define your catalogs at the project level, you will learn more about this in the lab.
 
 ![Enable Catalog per projects](assets/lab0-prerequisites/dev-center-enable-catalog-per-project.png)
 
@@ -398,7 +398,7 @@ Click on **Create**, your project have now the permissions to get and list secre
 
 ## Autorized customizations
 
-At this point, you have created a project with Dev Box pools for the frontend and the backend developers. Those Dev Box pools provide default configuration for your developers. However, you may want to allow your developers to customize their Dev Boxes to meet their specific needs or to install additional tools. This is possible by authorizing customizations at the project level.
+At this point, you have created a project with Dev Box pools for the frontend and the backend developers. These Dev Box pools provide default configuration for your developers. However, you may want to allow your developers to customize their Dev Boxes to meet their specific needs or to install additional tools. This can be done by authorizing customizations at the project level.
 
 Developers can customize their Dev Boxes using yaml files such as this one at the instanciation of the Dev Box:
 
@@ -954,7 +954,7 @@ Let's start by crafting a policy that denies the creation of network security gr
 
 ### Deploy the policy definition
 
-In the Azure Portal, search for **Policy** in thpage.
+In the Azure Portal, type **Policy** in the top search bar.
 ![Policy Page](assets/lab3-azurepolicy/azpolicy-search.png)
 
 Then click on **Definitions** and then **+ Policy definition**.
@@ -1368,7 +1368,7 @@ All the features that you will see in this lab can be control globally in a GitH
 
 ## Dependabot
 
-Let's activate Dependabot in your repository, go to **Settings** > **Code security and analysis** and enable **Dependabot alerts** and **Dependabot security updates**:
+Let's activate Dependabot in your repository, go to **Settings** > **Code security** and enable **Dependabot alerts** and **Dependabot security updates**:
 
 ![Enable Dependabot](assets/lab4-ghas/ghas-enable-dependabot.png)
 
@@ -1506,7 +1506,7 @@ jobs:
 
 As you probably already noticed, the action `actions/checkout` is outdated and should have a version greater than 3, let's see how `Dependabot version updates` can help you on that.
 
-Navigate to the **Settings** tab and select **Code security and analysis** and enable **Dependabot version updates**.
+Navigate to the **Settings** tab and select **Code security** and enable **Dependabot version updates**.
 You will be redirected to a YAML editor to define a file called `dependabot.yml`. This file allows you to configure dependabot to check dependencies of your different package manager and dynamically create Pull Requests to update them.
 
 <div class="task" data-title="Tasks">
@@ -1563,7 +1563,7 @@ Code scanning is a feature of GitHub Advanced Security that helps you find and f
 
 Let's create an empty file called `main.js` in your repository. You will add some code to this file later.
 
-To enable code scanning, go to the **Settings** tab and select **Code security and analysis**, then go to **Code scanning** inside and select **Set up** and **Default**.
+To enable code scanning, go to the **Settings** tab and select **Code security**, then go to **Code scanning** inside and select **Set up** and **Default**.
 
 ![Enable Code Scanning](assets/lab4-ghas/ghas-enable-code-scanning.png)
 
