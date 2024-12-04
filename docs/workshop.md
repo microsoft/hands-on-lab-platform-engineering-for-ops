@@ -171,9 +171,9 @@ user_default_password = "SET_YOUR_PASSWORD_HERE"
 number_of_users       = 20
 ```
 
-<div class="important" data-title="Warning">
+<div class="warning" data-title="Warning">
 
-Make sure to create an empty group of users inside Microsoft Entra Id with the same name provided in the `user_group_name` variable.
+> Make sure to create an empty group of users inside Microsoft Entra Id with the same name provided in the `user_group_name` variable.
 
 </div>
 
@@ -1024,7 +1024,9 @@ In your policy, click on **Assign policy**:
 You will be redirected to a new page, where you can assign the policy to a specific scope. In this case, select the resource group that contains the network security group of the resource group assigned to you for this lab.
 
 <div class="warning" data-title="Warning">
-Be sure to select the scope with YOUR resource group
+
+> Be sure to select the scope with YOUR resource group
+
 </div>
 
 ![Policy Assignment Scope](assets/lab3-azurepolicy/azpolicy-deny-policy-assignment-2.png)
@@ -1726,7 +1728,7 @@ Let's create a file called `secrets.yaml` in your repository with the following 
 
 <div class="warning" data-title="Warning">
 
-Do not forget to remove the `<REMOVEME>` block in the content.
+> Do not forget to remove the `<REMOVEME>` block in the content.
 
 </div>
 
