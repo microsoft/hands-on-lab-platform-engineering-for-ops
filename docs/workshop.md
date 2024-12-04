@@ -9,9 +9,13 @@ navigation_numbering: false
 authors: # Required. You can add as many authors as needed
   - Fethi Dilmi
   - Damien Aicheh
+  - Francois-Xavier Kim
+  - Louis-Guillaume Morand
 contacts: # Required. Must match the number of authors
   - "@fethidilmi"
   - "@damienaicheh"
+  - "@lgmorand"
+  - "@frkim"
 duration_minutes: 180
 tags: azure policies, azure deployment environment, github advanced security, microsoft dev box, dev center, azure, github, ops, csu
 navigation_levels: 3
@@ -68,6 +72,7 @@ The configuration for the environment is defined in the `.devcontainer` folder, 
 Every Github account (even the free ones) grants access to 120 vcpu hours per month, _**for free**_. A 2 vcpu dedicated environment is enough for the purpose of the lab, meaning you could run such environment for 60 hours a month at no cost!
 
 To get your codespace ready for the labs, here are a few steps to execute : 
+- Start by forking the repository. Click on `Fork` and get a new copy of the repository which is now yours and that you can edit at your will.
 - After you forked the repo, click on `<> Code`, `Codespaces` tab and then click on the `+` button:
 
 ![codespace-new](./assets/lab0-prerequisites/codespace-new.png)
@@ -166,7 +171,11 @@ user_default_password = "SET_YOUR_PASSWORD_HERE"
 number_of_users       = 20
 ```
 
+<div class="warning" data-title="Warning">
+
 Make sure to create an empty group of users inside Microsoft Entra Id with the same name provided in the `user_group_name` variable.
+
+</div>
 
 Then run the following command to deploy the infrastructure:
 
@@ -183,7 +192,9 @@ The deployment should take a few minutes to complete.
 
 To be able to use the Catalogs features in Azure Dev Center, you need to create a GitHub Personal Access Token (PAT) with the following permissions:
 
-In GitHub, select the profile image, and then select Settings. On the left sidebar, select **Developer settings** > **Personal access tokens** > **Fine-grained tokens**, select **Generate new token**.
+> Catalogs help you provide a set of curated IaC templates for your development teams to create environments. You can attach a catalog to a dev center make environment definitions available to all the projects associated with the dev center. You can also attach a catalog to a project to provide environment definitions to that specific project.
+
+In GitHub, in the top right corner, click on your profile image, and then select Settings. On the left sidebar, select **Developer settings** > **Personal access tokens** > **Fine-grained tokens**, select **Generate new token**.
 
 On the New fine-grained personal access token page, provide the following information:
 
@@ -193,13 +204,13 @@ In `Repository access` select **All repositories**, then expand `Repository perm
 
 Then click on **Generate token**. If you need more information on this mechanism you can refer to the [official documentation][az-dev-center-github-pat].
 
-Now, open the resource group deployed previously and open the Key Vault. In the **Secrets** tab, you will find a secret named `Pat`, click on it and then select **New Version** and update the value with your GitHub PAT:
+Now, open the resource group deployed previously (it's name should start with *"rg-lab-we-hol"*) and open the Key Vault. In the **Secrets** tab, you will find a secret named `Pat`, click on it and then select **New Version** and update the value with your GitHub PAT:
 
 ![Key Vault Pat](assets/lab0-prerequisites/key-vault-pat.png)
 
 ## Activate the Catalog feature
 
-Finally, in the Dev Center, go to **Settings** and then **Dev center settings** and Click on **Enable Catalog per projects**. This will allow you to define your catalogs at the project level, you will learn more about this in the lab.
+Finally, in the same resource group, open the Dev Center (name should start with *"dvc-lab-we-hol"*), go to **Settings** and then **Dev center settings** and Click on **Enable Catalog per projects**. This will allow you to define your catalogs at the project level, you will learn more about this in the lab.
 
 ![Enable Catalog per projects](assets/lab0-prerequisites/dev-center-enable-catalog-per-project.png)
 
@@ -329,6 +340,8 @@ Select **Yes** and set the maximum number of Dev Boxes that can be deployed per 
 
 ![Project max dev boxes](assets/lab1-devbox-mgmt/project-new-max-dev-boxes.png)
 
+Ignore the `Catalogs` part for now.
+
 Click on **Review + Create** and then **Create**.
 
 After a few seconds, the project is created. Open it.
@@ -388,7 +401,7 @@ Go to the **Settings** tab and click on **Identity** and add a System Assigned M
 
 Wait for the identity to be created.
 
-This will be used for the project to be able to interact with other Azure services such as the Key Vault that you will need later.
+This identity (kind of "service account") will be used for the project to be able to interact with other Azure services such as the Key Vault that you will need later.
 
 Go to the resource group and open the Key Vault. In the **Access policies** tab, add a new access policy for the project identity (`prj-ops-<your-initials>`) with the following permissions:
 
@@ -400,7 +413,7 @@ Click on **Create**, your project have now the permissions to get and list secre
 
 At this point, you have created a project with Dev Box pools for the frontend and the backend developers. These Dev Box pools provide default configuration for your developers. However, you may want to allow your developers to customize their Dev Boxes to meet their specific needs or to install additional tools. This can be done by authorizing customizations at the project level.
 
-Developers can customize their Dev Boxes using yaml files such as this one at the instanciation of the Dev Box:
+Developers can customize their Dev Boxes using [YAML files](https://en.wikipedia.org/wiki/YAML) such as this one at the instanciation of the Dev Box:
 
 ```yaml
 # https://github.com/microsoft/devcenter-catalog
@@ -427,7 +440,7 @@ tasks:
 # Other possibilities: powershell, winget, install-vs-extension   
 ```
 
-As you can see it's composed only of tasks that will be executed at the creation of the Dev Box. Those tasks are not available by default, you need to enable them at the project level.
+As you can see, it's composed only of tasks that will be executed at the creation of the Dev Box. Those tasks are not available by default in your DevBox, you need to enable them at the project level.
 
 You can control the different tasks that can be executed on the Dev Box by adding or not their definitions in a catalog.
 
@@ -461,8 +474,8 @@ Now, you can add a catalog to the project.
 
 <div class="task" data-title="Tasks">
 
-> - Add the Catalog `/tasks` available in the [Git repository][git-repo] of this lab to the project to enable the use of catalog items at the project definition. <br>
-> - Target the `main` branch of the repository.<br>
+> - Add the Catalog `/tasks` available in the [Git repository][git-repo] of this lab to the project to enable the use of catalog items at the project definition. Don't forget to add ".git" at the end of the URL (i.e.: https://github.com/microsoft/hands-on-lab-platform-engineering-for-ops.git)
+> - Target the `main` branch of the repository.
 > - Use the GitHub PAT token secret available in the Key Vault by refering this url with the right name: `https://<YOUR-KEY-VAULT-NAME>.vault.azure.net/secrets/Pat`
 > - Give the catalog the name `official-tasks`
 
@@ -503,9 +516,44 @@ To see the Dev Box in action, you can act as a developer assigned to the project
 
 In your project go to **Access control (IAM)** and add the role `DevCenter Dev Box User` to your self at the project level.
 
-Go to the [Dev Box Portal][dev-box-portal] and sign in, you should see a button to create a new Dev Box and be able to pass a yaml file to customize your Dev Box similar to the one we saw previously.
+Go to the [Dev Box Portal][dev-box-portal] and sign in, you should see a button to create a new Dev Box and be able to pass a YAML file to customize your Dev Box similar to the one we saw previously.
 
 ![Dev Portal for Developers](assets/lab1-devbox-mgmt/dev-box-portal-developers.png)
+
+For that, create a YAML file locally on your computer and past this content:
+
+```yaml
+# https://github.com/microsoft/devcenter-catalog
+# From https://github.com/microsoft/devcenter-examples
+# Optionaly declare the devbox image to use 
+
+$schema: 1.0
+name: "devbox-customization-example"
+tasks:
+  - name: choco
+    parameters:
+      package: vscode
+
+  - name: choco
+    parameters:
+      package: azd
+
+  - name: git-clone
+    description: Clone this repository into C:\Documents
+    parameters:
+      repositoryUrl: https://github.com/microsoft/dotnet.git
+      directory: C:\Documents
+
+# Other possibilities: powershell, winget, install-vs-extension   
+```
+
+Then use it to create a DevBox by enabling **customizations**. 
+
+<div class="tip" data-title="Tips">
+
+The creation of the DevBox can take a lot of time, but you can continue the lab during the creation
+
+</div>
 
 ## Act as a project administrator
 
@@ -520,7 +568,7 @@ Once a developer has created a Dev Box, you can see the total number of Dev Boxe
 
 # Lab 2 - Manage deployment environments
 
-Dev Center allows you to create and manage deployment environments for your projects which is the Azure Deployment Environment service. 
+Dev Center also allows you to create and manage `deployment environments` for your projects. This feature is named Azure Deployment Environment service. 
 
 Deployment environments are fully managed environments that can be customized to meet the needs of your developers based on Infra As Code (ARM, Bicep, Terraform, Pulumi). Developers can then deploy pre packaged environments in a safe and controlled way using the best practice of your company.
 
@@ -571,7 +619,7 @@ However, catalogs can also be used to define the Azure environments that will be
 
 The developers will be able to create environments using the same [portal][dev-box-portal] as they used for Dev Boxes.
 
-To define an environment for a catalog you need to create a yaml file that will define the environment configuration and associate this file with an Infra As Code template.
+To define an environment for a catalog you need to create a YAML file that will define the environment configuration and associate this file with an Infra As Code template.
 
 The templates that you will use for this lab are located in the `environments` folder of this [repository][git-repo].
 
@@ -701,7 +749,7 @@ Finally you should see your 3 catalogs:
 
 Let's act as a developer to try to create an environment using the catalog you just added. 
 
-Add the role `Deployment Environments User` to your self  at the project level.
+Add the role `Deployment Environments User` to your self  at the project level. It can takes few minutes to apply.
 
 Go to the [Dev Box Portal][dev-box-portal] and sign in.
 
@@ -974,6 +1022,10 @@ In your policy, click on **Assign policy**:
 ![Policy Page](assets/lab3-azurepolicy/azpolicy-deny-policy-assignment-1.png)
 
 You will be redirected to a new page, where you can assign the policy to a specific scope. In this case, select the resource group that contains the network security group of the resource group assigned to you for this lab.
+
+<div class="warning" data-title="Warning">
+Be sure to select the scope with YOUR resource group
+</div>
 
 ![Policy Assignment Scope](assets/lab3-azurepolicy/azpolicy-deny-policy-assignment-2.png)
 

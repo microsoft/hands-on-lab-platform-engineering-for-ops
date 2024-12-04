@@ -1,14 +1,14 @@
-# Project
+# Platform Engineering for Ops - Workshop
 
-> This repo has been populated by an initial template to help get you started. Please
-> make sure to update the content to build a great experience for community-building.
+This repository is meant to be used with the [MOAW (Mother of All Workshops) platform](https://moaw.dev). The live version of this workshop can be found [here](https://moaw.dev/workshop/gh:microsoft/hands-on-lab-platform-engineering-for-ops/main/docs/).
 
-As the maintainer of this project, please make a few updates:
+## Introduction
 
-- Improving this README.MD file to provide a great experience
-- Updating SUPPORT.MD with content about this project's support experience
-- Understanding the security reporting process in SECURITY.MD
-- Remove this section from the README
+Welcome to this Platform engineering for Ops Workshop. You'll be experimenting with Azure services in multiple labs to undestand real world scenarios.
+In this lab, you are going to cover:
+- Azure DevBox
+- Use Azure Policy
+- Use GitHub Advanced Security
 
 ## Contributing
 
