@@ -409,6 +409,12 @@ Go to the resource group and open the Key Vault. In the **Access policies** tab,
 
 Click on **Create**, your project have now the permissions to get and list secrets from the Key Vault.
 
+<div class="warning" data-title="Warning">
+
+> The DevCenter and each project have a different managed identity so depending on which one needs to connect to the KeyVault, you may have to add different access policies
+
+</div>
+
 ## Autorized customizations
 
 At this point, you have created a project with Dev Box pools for the frontend and the backend developers. These Dev Box pools provide default configuration for your developers. However, you may want to allow your developers to customize their Dev Boxes to meet their specific needs or to install additional tools. This can be done by authorizing customizations at the project level.
@@ -451,7 +457,7 @@ Official catalogs are available here:
 
 You can pick the tasks you want and put it in your own company repository and then refer it to the project as a catalog or refer these repositories directly.
 
-In our case you already have a folder called `tasks` available in this [Git repository][git-repo] with the following tasks:
+In our case, you already have a folder called `tasks` available in this [Git repository][git-repo] with the following tasks:
 
 - choco
 - customization-wsl
@@ -466,15 +472,15 @@ To enable the use of catalog items, go to your project, under **Settings**, sele
 
 ![Project enable catalog items](assets/lab1-devbox-mgmt/project-enable-catalog-items.png)
 
-In the **Catalog item settings** pane, select **Azure deployment environment definitions** to enable the use of environment definitions at the project level.
+In the **Catalog's Sync settings** pane, select **Azure deployment environment definitions** to enable the use of environment definitions at the project level.
 
 ![Project enable catalog items validation](assets/lab1-devbox-mgmt/project-enable-catalog-items-validation.png)
 
-Now, you can add a catalog to the project.
+Now, you can add a catalog to the project which normally we would do with "environments" (that's we are going to see in the next chapter).
 
 <div class="task" data-title="Tasks">
 
-> - Add the Catalog `/tasks` available in the [Git repository][git-repo] of this lab to the project to enable the use of catalog items at the project definition. Don't forget to add ".git" at the end of the URL (i.e.: https://github.com/microsoft/hands-on-lab-platform-engineering-for-ops.git)
+> - Add the Catalog `/tasks` available in the [Git repository][git-repo] of this lab to the DevCenter level. We do it at the top level to show that imported tasks can be reused by everyone. Don't forget to add ".git" at the end of the URL (i.e.: https://github.com/microsoft/hands-on-lab-platform-engineering-for-ops.git)
 > - Target the `main` branch of the repository.
 > - Use the GitHub PAT token secret available in the Key Vault by refering this url with the right name: `https://<YOUR-KEY-VAULT-NAME>.vault.azure.net/secrets/Pat`
 > - Give the catalog the name `official-tasks`
