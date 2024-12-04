@@ -803,7 +803,7 @@ In the Azure Portal, there are dedicated resource groups for each participant ba
 In your resource group, you will find:
 
 - A virtual network
-- An Azure Resource Manager template spec that deploys a network security group with few inbound rules.
+- An Azure Resource Manager template spec that deploys a network security group with few inbound rules. (you can ignore it for now)
 
 Azure Policy has many effects, but in this lab you will focus on the 3 main effects that can be applied to resources: 
 - Deny
@@ -823,11 +823,11 @@ Each effect has a different impact on the resources that are evaluated against t
 
 ## Getting started with the Deny effect
 
-Let's start by crafting a policy that denies the creation of network security group rules that allow inbound traffic from public IP addresses into the virtual network. The policy will take as a parameter a list of allowed IP ranges in case you need to allow some specific IP addresses (like CDN IPs or Proxy IPs).
+Let's start by crafting a new policy that denies the creation of network security group rules that allow inbound traffic from public IP addresses into the virtual network. The policy will take as a parameter a list of allowed IP ranges in case you need to allow some specific IP addresses (like CDN IPs or Proxy IPs).
 
 ### Discover the policy definition
 <details>
-<summary>📚 Open the Policy definition to deploy</summary>
+<summary>📚 Here is the new Policy definition to deploy</summary>
 
 ```json
 {
@@ -1531,9 +1531,11 @@ Then you can click on the **Review security update** which will redirect you to 
 
 </div>
 
+Did you see the number of alerts decreasing after you approved the Pull Request and that GitHub fixed the issue for you ?
+
 Now let's activate another feature called `Dependabot version updates`.
 
-First, add a new file called `sandbox-workflow.yaml` inside the `.github/workflows` with the content provided below.
+First, add a new file called `sandbox-workflow.yaml` inside the `.github/workflows` with the content provided below. You have to create the folders first of course.
 
 <details>
 <summary>📄sandbox-workflow.yaml</summary>
@@ -1613,7 +1615,11 @@ In this first section you have learned how to:
 
 Code scanning is a feature of GitHub Advanced Security that helps you find and fix security vulnerabilities in your code. It scans your code as well as your pull requests are created and alerts you about any vulnerabilities found.
 
-Let's create an empty file called `main.js` in your repository. You will add some code to this file later.
+Let's create an empty file called `main.js` in your repository. Just add some code in it such as
+
+```js
+console.log("hello")
+```
 
 To enable code scanning, go to the **Settings** tab and select **Code security**, then go to **Code scanning** inside and select **Set up** and **Default**.
 
@@ -1716,7 +1722,13 @@ Secret scanning is enabled by default for all public repositories.
 
 The main feature regarding secret scanning is the ability to block the push of a commit if a secret is found in the code.
 
-Let's create a file called `secrets.yaml` in your repository with the following content, do not forget to remove the `<REMOVEME>` block:
+Let's create a file called `secrets.yaml` in your repository with the following content.
+
+<div class="warning" data-title="Warning">
+
+Do not forget to remove the `<REMOVEME>` block in the content.
+
+</div>
 
 ```yaml
 default:
