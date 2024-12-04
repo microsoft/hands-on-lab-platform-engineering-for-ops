@@ -171,7 +171,7 @@ user_default_password = "SET_YOUR_PASSWORD_HERE"
 number_of_users       = 20
 ```
 
-<div class="warning" data-title="Warning">
+<div class="important" data-title="Warning">
 
 Make sure to create an empty group of users inside Microsoft Entra Id with the same name provided in the `user_group_name` variable.
 
