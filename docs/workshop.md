@@ -1749,7 +1749,11 @@ If you go to the **Security** tab, you should see the alert raised by the secret
 
 ![Secret scanning tab](assets/lab4-ghas/ghas-secret-scaning-tab.png)
 
-When you work in a local environment or a GitHub Codespace, secret scanning cannot block your commit but  your push to GitHub will be blocked. In this case, if the secret is active then you will need to remove the secret from your branch and commit history or revoke it.
+<div class="warning" data-title="Warning">
+
+> When you work in a local environment or a GitHub Codespace, secret scanning cannot block your commit but  your push to GitHub will be blocked. In this case, if the secret is active then you will need to remove the secret from your branch and commit history or revoke it.
+
+</div>
 
 You can find all the patterns available for secret scanning in the official [documentation][github-secret-scanning-patterns-available].
 
