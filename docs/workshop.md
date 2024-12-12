@@ -230,13 +230,13 @@ Click on **Apply** and you are ready for the lab!
 
 For DevBox pools to function correctly, you need to activate an [Intune Plan 1 Trial][intune-plan]. This is a requirement for the DevBox service to work.
 
+[intune-plan]: https://signup.microsoft.com/get-started/signup?products=40BE278A-DFD1-470a-9EF7-9F2596EA7FF9&ali=1&bac=2&culture=en-us&country=us
+
 <div class="tip" data-title="Tips">
 
 > You would need to use an Entra ID member account (not a guest) to perform this operation.
 
 </div>
-
-[intune-plan]: https://signup.microsoft.com/get-started/signup?products=40BE278A-DFD1-470a-9EF7-9F2596EA7FF9&ali=1&bac=2&culture=en-us&country=us
 
 ---
 
