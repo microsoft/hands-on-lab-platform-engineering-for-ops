@@ -39,4 +39,5 @@ parameters:
     name: "location"
     description: "Location to deploy the environment resources. If not specified, will deploy to the region of the project"
     type: "string"
+    default: "northeurope"
 runner: Bicep

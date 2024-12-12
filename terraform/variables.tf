@@ -22,7 +22,7 @@ variable "application" {
 
 variable "location" {
   type        = string
-  default     = "westeurope"
+  default     = "northeurope"
   description = "The Azure region where the resources should be created"
 }
 
